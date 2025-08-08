@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import DocumentSorter from './DocumentSorter';
 import FolderList from './FolderList';
 import './Dashboard.css';
+import Banner from './banner';
 
 export default function Dashboard() {
   const [documents, setDocuments] = useState({});
@@ -28,7 +29,11 @@ export default function Dashboard() {
   };
 
   return (
+    
     <div className="dashboard">
+      <div>
+      <Banner />
+    </div>
       <h2>📂 Dashboard</h2>
       <DocumentSorter onSorted={handleSorted} />
       <FolderList documents={documents} onDelete={handleDelete} />

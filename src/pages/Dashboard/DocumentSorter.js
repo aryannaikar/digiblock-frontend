@@ -36,6 +36,9 @@ export default function DocumentSorter({ onSorted }) {
         uploadedAt: new Date().toISOString(),
       };
 
+     
+      
+
       onSorted(newDoc);
       setStatus(`Sorted to "${folder}"`);
     };
@@ -51,6 +54,11 @@ export default function DocumentSorter({ onSorted }) {
     if (lower.includes("voter id") || lower.includes("election commission")) return "Voter";
     if (lower.includes("driving license")) return "Driving License";
     if (lower.includes("birth certificate")) return "Birth Certificate";
+    if (lower.includes("marksheet") && lower.includes("class 10")) return "10th Marksheet";
+    if (lower.includes("marksheet") && lower.includes("class 12")) return "12th Marksheet";
+    if (lower.includes("degree certificate")) return "Degree Certificate";
+    if (lower.includes("caste certificate")) return "Caste Certificate";
+
     return null;
   };
 

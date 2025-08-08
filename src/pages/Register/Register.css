@@ -82,3 +82,12 @@ h1{
 .para{
   color: black;
 }
+
+
+
+@media (max-width: 768px) {
+  .register-container{
+    width: 80%;
+    height:50%;
+  }
+}

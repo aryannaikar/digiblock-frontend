@@ -1,5 +1,11 @@
 /* General Reset and Font */
-body, h1, h2, h3, p, ul, li {
+body,
+h1,
+h2,
+h3,
+p,
+ul,
+li {
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -7,13 +13,17 @@ body, h1, h2, h3, p, ul, li {
 
 /* Container */
 .dashboard {
-  max-width: 800px;
+  max-width: 1600px;
   margin: 30px auto;
   padding: 30px;
-  background: #f8f9fb;
+  background: transparent;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
   border-radius: 16px;
   border: 1px solid #dce3ed;
+  margin-top: 100px;
+  background-image: radial-gradient(white,purple);
+
+
 }
 
 /* Headings */
@@ -35,7 +45,8 @@ input[type="file"] {
   padding: 10px;
   margin-bottom: 10px;
   background-color: #fff;
-  border: 2px dashed #cbd5e1;
+  border: 2px dashed #0073ff;
+  box-shadow: 2px 2px 15px  #0073ff;
   border-radius: 10px;
   cursor: pointer;
 }
@@ -49,8 +60,8 @@ p {
 img {
   margin-top: 10px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  max-width: 200px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  width: 200px;
 }
 
 /* Uploaded List */
@@ -73,14 +84,14 @@ ul {
 } */
 
 /* Document Name & Size */
- li strong {
+li strong {
   color: #1d4ed8;
 }
 
 li span {
   font-size: 14px;
   color: #64748b;
-} 
+}
 
 /* Buttons */
 button {
@@ -99,11 +110,234 @@ button {
 
 button[style*="red"] {
   background-color: #ffffff;
-  border: solid red 1px; 
+  border: solid red 1px;
 }
 
 button[style*="red"]:hover {
   background-color: #b91c1c;
   color: white;
   border: solid white 1px;
+}
+
+
+
+/* ///////////////////////////// */
+
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  justify-content: center;
+}
+
+.card {
+  width: 220px;
+  padding: 1rem;
+  border-radius: 10px;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card h4 {
+  margin-bottom: 10px;
+}
+
+.card button {
+  margin-top: 10px;
+  padding: 6px 10px;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.card button:hover:not(.disabled-btn) {
+  background-color: #e0e0e0;
+}
+
+.disabled-btn {
+  background-color: #ccc;
+  color: #555;
+  cursor: not-allowed;
+}
+
+.delete-btn {
+  background-color: red;
+  color: white;
+  margin-left: 5px;
+}
+
+
+
+
+.scroll-section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.card-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  scroll-behavior: smooth;
+  padding: 10px;
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.card-scroll::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari */
+}
+
+.card {
+  min-width: 220px;
+  flex-shrink: 0;
+  padding: 1rem;
+  border-radius: 10px;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.card h4 {
+  margin-bottom: 10px;
+}
+
+.card button {
+  margin-top: 10px;
+  padding: 6px 10px;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.card button:hover:not(.disabled-btn) {
+  background-color: #e0e0e0;
+}
+
+.disabled-btn {
+  background-color: #ccc;
+  color: #555;
+  cursor: not-allowed;
+}
+
+.delete-btn {
+  background-color: red;
+  color: white;
+  margin-left: 5px;
+}
+
+.scroll-btn {
+  background-color: #333;
+  color: white;
+  font-size: 1.5rem;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+  margin: 0 10px;
+}
+
+.scroll-btn.left {
+  margin-right: -10px;
+}
+
+.scroll-btn.right {
+  margin-left: -10px;
+}
+
+
+.no-doc {
+  color: white;
+}
+
+/* Dark Mode Overrides */
+body.dark .dashboard {
+  background-image: radial-gradient(rgb(0, 0, 0), purple);
+  color: white;
+  border: 1px solid #555;
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.06);
+}
+
+body.dark h2,
+body.dark h3,
+body.dark p,
+body.dark li strong,
+body.dark li span {
+  color: white;
+}
+
+body.dark input[type="file"] {
+  background-color: #222;
+  color: white;
+  border-color: #888;
+  box-shadow: 2px 2px 15px rgb(251, 89, 251);
+}
+
+body.dark .card {
+  background-color: #222;
+  color: white;
+}
+
+body.dark .card button {
+  background-color: white;
+  color: black;
+}
+
+body.dark .delete-btn {
+  background-color: #ff4d4d;
+}
+
+body.dark .scroll-btn {
+  background-color: white;
+  color: black;
+}
+
+body.dark .no-doc {
+  color: #ccc;
+}
+
+
+
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  
+  .dashboard{
+    width: 125%;
+  }
+  
+  .card-scroll {
+    width: 80%;
+  }
+
+  .scroll-section {
+    width: 150%;
+    position: relative;
+    right: 40px;
+  }
+
+  .card {
+    width: 40%;
+  }
+
+  .scroll-btn {
+    display: none;
+  }
+
+ 
+
 }

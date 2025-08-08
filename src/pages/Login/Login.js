@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './Login.css';
 
@@ -41,12 +41,8 @@ export default function Login() {
 
           <button type="submit">Login</button>
         </form>
+ 
 
-        <div className="divider">OR</div>
-
-        <Link to="/OtpLogin" className="otp-login-link">
-          📲 Login with OTP
-        </Link>
       </div>
     </div>
   );

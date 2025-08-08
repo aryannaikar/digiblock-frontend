@@ -1,0 +1,83 @@
+/* Main container */
+.getting-started-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  font-family: 'Arial', sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header section */
+.getting-started-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.getting-started-header h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.getting-started-header h2 {
+  font-size: 2rem;
+  color: #666;
+  font-weight: 400;
+}
+
+/* Steps container */
+.steps-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+/* Individual step */
+.step {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.step:hover {
+  transform: translateY(-5px);
+}
+
+.step-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4a6bff;
+  margin-bottom: 1rem;
+}
+
+.step-title {
+  font-size: 1.2rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.step-icon {
+  font-size: 2rem;
+  color: #4a6bff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .steps-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+

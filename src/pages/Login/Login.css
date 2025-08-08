@@ -105,3 +105,15 @@ h1{
 .par{
   color: #000000;
 }
+
+
+@media (max-width: 768px) {
+  .login-container{
+    width: 80%;
+    height:50%;
+  }
+
+  input{
+    width: 90%;
+  }
+}
