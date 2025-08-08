@@ -1,0 +1,109 @@
+/* General Reset and Font */
+body, h1, h2, h3, p, ul, li {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Container */
+.dashboard {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 30px;
+  background: #f8f9fb;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  border: 1px solid #dce3ed;
+}
+
+/* Headings */
+.dashboard h2 {
+  text-align: center;
+  font-size: 28px;
+  color: #1f2937;
+  margin-bottom: 25px;
+}
+
+h3 {
+  font-size: 20px;
+  color: #374151;
+  margin-bottom: 15px;
+}
+
+/* File Upload */
+input[type="file"] {
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  border: 2px dashed #cbd5e1;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Status & Preview */
+p {
+  margin: 10px 0;
+  color: #475569;
+}
+
+img {
+  margin-top: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  max-width: 200px;
+}
+
+/* Uploaded List */
+ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 15px;
+}
+
+/* li {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 15px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+} */
+
+/* Document Name & Size */
+ li strong {
+  color: #1d4ed8;
+}
+
+li span {
+  font-size: 14px;
+  color: #64748b;
+} 
+
+/* Buttons */
+button {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: background-color 0.2s ease;
+}
+
+
+
+button[style*="red"] {
+  background-color: #ffffff;
+  border: solid red 1px; 
+}
+
+button[style*="red"]:hover {
+  background-color: #b91c1c;
+  color: white;
+  border: solid white 1px;
+}

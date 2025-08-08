@@ -1,0 +1,107 @@
+.login-body{
+ background-image: url(bg.jpg);
+ background-size: cover ;
+ height: 100vh;
+ margin: 0px;
+
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: solid black;
+  width: 50vh;
+  height: 60vh; /* Added height */
+  margin: auto;
+  margin-top: 0px;
+  flex-direction: column; /* To stack items vertically */
+  border-radius: 30px;
+  
+  transform: translate(0px ,100px);
+    /* background: rgba(255, 255, 255, 0.1); */
+  backdrop-filter: blur(6px); /* Blur the background behind */
+  -webkit-backdrop-filter: blur(10px); 
+  border: 5px solid rgba(0, 0, 0, 0.3); /* Optional subtle border */
+
+}
+
+.login-container:hover{
+  box-shadow: 1px 4px 25px white; /* Optional subtle shadow */
+  transition: 0.4s;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  margin: auto ;
+  color: white;
+  font-size: 3vh;
+}
+
+.login-form input, .login-form button {
+  margin-bottom: 15px;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 20px;
+  
+}
+
+
+.login-form button{
+  width: 100px;
+  align-items: center;  
+  margin: auto;
+  color: rgb(0, 0, 0);
+  font-size: 2.2vh;
+  border-radius: 50px;
+  background-color: gold;
+  border: solid 1px
+}
+
+.login-form button:hover{
+  box-shadow: 1px 1px 7px rgb(0, 102, 255);
+  transform: scale(1.05);
+  transition: 0.2s;
+  color: rgb(255, 255, 255);
+  
+}
+
+.login-form input:hover{
+  transform: scale(1.02);
+  transition: 0.2s;
+}
+
+h1{
+  margin-top: 20px;
+  color: gold;
+  text-decoration: underline;
+  font-size: 5vh;
+}
+
+.error{
+  color: red;
+  font-size: 4vh;
+  font-style: oblique;
+  width: 35vh;
+  margin-left: 25px;
+}
+
+.otp-login-link {
+  display: inline-block;
+  margin-top: 10px;
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+}
+
+.divider {
+  margin: 20px 0;
+  text-align: center;
+  color: #000000;
+}
+
+.par{
+  color: #000000;
+}
