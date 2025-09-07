@@ -23,7 +23,7 @@ export default function Home() {
 
       if (progress < 0.33) {
         locker.style.transform = "translate(50%, -80%)";
-      } else if (progress < 0.55) {
+      } else if (progress < 0.65) {
         locker.style.transform = "translate(-130%, -50%)";
       } else {
         locker.style.transform = "translate(-50%, -50%)";
@@ -52,7 +52,7 @@ export default function Home() {
 
   return (
     <div className="home-container safe-scroll">
-      <h1>Welcome {user?.username}!</h1>
+      <h1 className="Wel">Welcome {user?.username}!</h1>
       <model-viewer
         id="locker"
         className={zooming ? "zoom-in" : ""}
@@ -69,7 +69,7 @@ export default function Home() {
           <p>
             DigiBlock is your secure, blockchain-powered digital locker.
             Store important documents, certificates, and credentials with complete confidence,
-            knowing that every file’s authenticity is protected by cryptographic verification.
+            knowing that every files authenticity is protected by cryptographic verification.
             No tampering. No unauthorized access. Your data, your control.
           </p>
         </div>

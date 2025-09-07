@@ -20,6 +20,8 @@ export default function DocumentSorter({ onSorted }) {
       });
 
       const extractedText = result.data.text;
+      console.log("OCR Output:", extractedText);
+
       const folder = classifyDocument(extractedText);
 
       if (!folder) {
@@ -27,6 +29,10 @@ export default function DocumentSorter({ onSorted }) {
         return;
       }
 
+      // Extract specific details for the modal
+      const details = extractSpecificDetails(folder, extractedText);
+
+      // Create doc object with details included
       const newDoc = {
         name: file.name,
         size: file.size,
@@ -34,11 +40,10 @@ export default function DocumentSorter({ onSorted }) {
         data: reader.result,
         folder,
         uploadedAt: new Date().toISOString(),
+        details, // store extracted info here
       };
 
-     
-      
-
+      // Send to parent for storage
       onSorted(newDoc);
       setStatus(`Sorted to "${folder}"`);
     };
@@ -58,8 +63,38 @@ export default function DocumentSorter({ onSorted }) {
     if (lower.includes("marksheet") && lower.includes("class 12")) return "12th Marksheet";
     if (lower.includes("degree certificate")) return "Degree Certificate";
     if (lower.includes("caste certificate")) return "Caste Certificate";
-
     return null;
+  };
+
+  const extractSpecificDetails = (folder, text) => {
+    let detail = null;
+
+    if (folder === "Aadhaar") {
+      const match = text.match(/\b\d{4}\s\d{4}\s\d{4}\b/);
+      detail = match ? `Aadhaar Number: ${match[0]}` : "Aadhaar number not found.";
+    } 
+    else if (folder === "PAN") {
+      let cleaned = text.replace(/\s+/g, "");
+      cleaned = cleaned
+        .replace(/0/g, "O")
+        .replace(/1/g, "I")
+        .replace(/8/g, "B");
+      const match = cleaned.match(/[A-Z]{5}[0-9]{4}[A-Z]{1}/);
+      detail = match ? `PAN Number: ${match[0]}` : "PAN number not found.";
+    }
+    else if (folder === "Passport") {
+      const match = text.match(/\b[A-Z][0-9]{7}\b/);
+      detail = match ? `Passport Number: ${match[0]}` : "Passport number not found.";
+    }
+    else if (folder === "Voter") {
+      const match = text.match(/\b[A-Z]{3}[0-9]{7}\b/);
+      detail = match ? `Voter ID: ${match[0]}` : "Voter ID not found.";
+    }
+    else {
+      detail = "Specific detail extraction not configured for this document type.";
+    }
+
+    return detail;
   };
 
   return (

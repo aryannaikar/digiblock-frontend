@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import './Dashboard.css';
 
 const ALL_FOLDERS = [
@@ -21,6 +21,7 @@ const folderColors = [
 
 export default function FolderList({ documents, onDelete }) {
   const scrollRef = useRef(null);
+  const [selectedDoc, setSelectedDoc] = useState(null);
 
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -31,6 +32,8 @@ export default function FolderList({ documents, onDelete }) {
     }
   };
 
+  
+
   return (
     <div className="scroll-section">
       <button className="scroll-btn left" onClick={() => scroll('left')}>&#8592;</button>
@@ -40,7 +43,6 @@ export default function FolderList({ documents, onDelete }) {
           const doc = documents[folder];
           const color = folderColors[idx % folderColors.length];
 
-
           return (
             <div key={folder} className="card" style={{ backgroundColor: color }}>
               <h4>{folder}</h4>
@@ -48,6 +50,7 @@ export default function FolderList({ documents, onDelete }) {
                 <>
                   <p>{doc.name} ({Math.round(doc.size / 1024)} KB)</p>
                   <button onClick={() => window.open(doc.data, '_blank')}>View</button>
+                  <button onClick={() => setSelectedDoc(doc)}>Details</button>
                   <button onClick={() => onDelete(folder)} className="delete-btn">🗑</button>
                 </>
               ) : (
@@ -62,6 +65,20 @@ export default function FolderList({ documents, onDelete }) {
       </div>
 
       <button className="scroll-btn right" onClick={() => scroll('right')}>&#8594;</button>
+
+      {/* Modal for showing document details */}
+      {selectedDoc && (
+        <div className="modal-overlay" onClick={() => setSelectedDoc(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Document Details</h3>
+            <p><strong>Name:</strong> {selectedDoc.name}</p>
+            <p><strong>Type:</strong> {selectedDoc.type}</p>
+            <p><strong>Uploaded:</strong> {new Date(selectedDoc.uploadedAt).toLocaleString()}</p>
+            <p><strong>Extracted Info:</strong> {selectedDoc.details || "No details available"}</p>
+            <button onClick={() => setSelectedDoc(null)}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
