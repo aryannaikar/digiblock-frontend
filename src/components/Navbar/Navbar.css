@@ -21,12 +21,11 @@ body.dark {
    background-image: linear-gradient(to bottom right,rgb(0, 132, 255) ,white,rgb(0, 132, 255));
   /* background-image: linear-gradient(to right,blue,white); */
   border: solid black 1px;
-  width: 210vh;
+  width: 218.5vh;
   top: 0;
   z-index: 999;
   border-radius: 15px;
   position: fixed;
-  left: 4vh;
 
 }
 
@@ -120,6 +119,7 @@ body.dark .logo{
   font-size: 20px;
   cursor: pointer;
   color: #333;
+  transform: translate(-7px,-7px);
 }
 
 .navbar-dark .toggle-btn {

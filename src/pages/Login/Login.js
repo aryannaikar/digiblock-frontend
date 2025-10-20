@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './Login.css';
 
@@ -9,11 +9,16 @@ export default function Login() {
   const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = login(form.username, form.password);
-    if (res.success) navigate('/');
-    else setError(res.message);
+    setError('');
+
+    const res = await login(form.username, form.password);
+    if (res.success) {
+      navigate('/');
+    } else {
+      setError(res.message);
+    }
   };
 
   return (
@@ -41,8 +46,6 @@ export default function Login() {
 
           <button type="submit">Login</button>
         </form>
- 
-
       </div>
     </div>
   );

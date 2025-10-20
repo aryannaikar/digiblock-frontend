@@ -6,9 +6,10 @@ import Register from './pages/Register/Register';
 import Navbar from './components/Navbar/Navbar';
 import Home from './pages/Home/Home';
 import Dashboard from './pages/Dashboard/Dashboard';
-import './App.css'
+import './App.css';
 import OtpLogin from './pages/OtpLogin/OtpLogin';
-import DocumentSorter from './pages/Dashboard/DocumentSorter'; // ✅ NEW Import
+import DocumentSorter from './pages/Dashboard/DocumentSorter';
+import ApiTest from './pages/ApiTest/ApiTest'; // ✅ Added import
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
@@ -26,7 +27,8 @@ export default function App() {
             <Route path="/OtpLogin" element={<OtpLogin />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/register" element={<Register />} />
-             <Route path="/dashboard/sorter" element={
+            <Route path="/apitest" element={<ApiTest />} /> {/* ✅ Added route */}
+            <Route path="/dashboard/sorter" element={
               <PrivateRoute>
                 <DocumentSorter />
               </PrivateRoute>
@@ -38,7 +40,6 @@ export default function App() {
             } />
           </Routes>
         </div>
-
       </Router>
     </AuthProvider>
   );

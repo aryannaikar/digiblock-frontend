@@ -48,8 +48,9 @@ export default function FolderList({ documents, onDelete }) {
               <h4>{folder}</h4>
               {doc ? (
                 <>
-                  <p>{doc.name} ({Math.round(doc.size / 1024)} KB)</p>
-                  <button onClick={() => window.open(doc.data, '_blank')}>View</button>
+                  <p>{doc.name}</p>
+                  <p className="extracted-info">{doc.extractedDetails || "No details extracted"}</p>
+                  <button onClick={() => window.open(`http://localhost:5000/${doc.fileUrl}`, '_blank')}>View</button>
                   <button onClick={() => setSelectedDoc(doc)}>Details</button>
                   <button onClick={() => onDelete(folder)} className="delete-btn">🗑</button>
                 </>
@@ -74,7 +75,17 @@ export default function FolderList({ documents, onDelete }) {
             <p><strong>Name:</strong> {selectedDoc.name}</p>
             <p><strong>Type:</strong> {selectedDoc.type}</p>
             <p><strong>Uploaded:</strong> {new Date(selectedDoc.uploadedAt).toLocaleString()}</p>
-            <p><strong>Extracted Info:</strong> {selectedDoc.details || "No details available"}</p>
+            <p><strong>Extracted Details:</strong> {selectedDoc.extractedDetails || "No details available"}</p>
+            {selectedDoc.extractedData && (
+              <div>
+                <p><strong>Full OCR Text:</strong></p>
+                <textarea 
+                  readOnly 
+                  value={selectedDoc.extractedData} 
+                  style={{width: '100%', height: '100px', marginTop: '10px'}}
+                />
+              </div>
+            )}
             <button onClick={() => setSelectedDoc(null)}>Close</button>
           </div>
         </div>

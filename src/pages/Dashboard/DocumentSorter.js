@@ -1,51 +1,57 @@
 import React, { useState } from 'react';
 import Tesseract from 'tesseract.js';
+import { useAuth } from '../../context/AuthContext';
 import './Dashboard.css';
 
 export default function DocumentSorter({ onSorted }) {
   const [status, setStatus] = useState('');
   const [preview, setPreview] = useState(null);
+  const { user, authAxios } = useAuth();
 
   const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    if (!user) {
+      setStatus('Please log in before uploading.');
+      return;
+    }
 
-    setStatus('Reading...');
+    setStatus('Reading document...');
     setPreview(URL.createObjectURL(file));
 
     const reader = new FileReader();
     reader.onload = async () => {
-      const result = await Tesseract.recognize(reader.result, 'eng', {
-        logger: m => setStatus(m.status),
-      });
+      try {
+        const result = await Tesseract.recognize(reader.result, 'eng', {
+          logger: m => setStatus(m.status)
+        });
 
-      const extractedText = result.data.text;
-      console.log("OCR Output:", extractedText);
+        const text = result.data.text;
+        const folder = classifyDocument(text);
+        if (!folder) {
+          setStatus('Could not classify this document.');
+          return;
+        }
 
-      const folder = classifyDocument(extractedText);
+        const details = extractSpecificDetails(folder, text);
 
-      if (!folder) {
-        setStatus("Could not classify the document.");
-        return;
+        // Upload file to backend
+        const formData = new FormData();
+        formData.append('document', file);
+        formData.append('folder', folder);
+        formData.append('extractedData', text); // Full OCR text
+        formData.append('extractedDetails', details); // Specific extracted details
+
+        const res = await authAxios.post('/api/upload/add', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+
+        onSorted({ ...res.data.document, details });
+        setStatus(`Uploaded and sorted to "${folder}"`);
+      } catch (err) {
+        console.error(err);
+        setStatus('Upload failed.');
       }
-
-      // Extract specific details for the modal
-      const details = extractSpecificDetails(folder, extractedText);
-
-      // Create doc object with details included
-      const newDoc = {
-        name: file.name,
-        size: file.size,
-        type: file.type,
-        data: reader.result,
-        folder,
-        uploadedAt: new Date().toISOString(),
-        details, // store extracted info here
-      };
-
-      // Send to parent for storage
-      onSorted(newDoc);
-      setStatus(`Sorted to "${folder}"`);
     };
 
     reader.readAsDataURL(file);
@@ -67,39 +73,27 @@ export default function DocumentSorter({ onSorted }) {
   };
 
   const extractSpecificDetails = (folder, text) => {
-    let detail = null;
-
     if (folder === "Aadhaar") {
       const match = text.match(/\b\d{4}\s\d{4}\s\d{4}\b/);
-      detail = match ? `Aadhaar Number: ${match[0]}` : "Aadhaar number not found.";
-    } 
-    else if (folder === "PAN") {
-      let cleaned = text.replace(/\s+/g, "");
-      cleaned = cleaned
-        .replace(/0/g, "O")
-        .replace(/1/g, "I")
-        .replace(/8/g, "B");
+      return match ? `Aadhaar Number: ${match[0]}` : "Aadhaar number not found.";
+    } else if (folder === "PAN") {
+      let cleaned = text.replace(/\s+/g, "").replace(/0/g,"O").replace(/1/g,"I").replace(/8/g,"B");
       const match = cleaned.match(/[A-Z]{5}[0-9]{4}[A-Z]{1}/);
-      detail = match ? `PAN Number: ${match[0]}` : "PAN number not found.";
-    }
-    else if (folder === "Passport") {
+      return match ? `PAN Number: ${match[0]}` : "PAN number not found.";
+    } else if (folder === "Passport") {
       const match = text.match(/\b[A-Z][0-9]{7}\b/);
-      detail = match ? `Passport Number: ${match[0]}` : "Passport number not found.";
-    }
-    else if (folder === "Voter") {
+      return match ? `Passport Number: ${match[0]}` : "Passport number not found.";
+    } else if (folder === "Voter") {
       const match = text.match(/\b[A-Z]{3}[0-9]{7}\b/);
-      detail = match ? `Voter ID: ${match[0]}` : "Voter ID not found.";
+      return match ? `Voter ID: ${match[0]}` : "Voter ID not found.";
+    } else {
+      return "Detail extraction not configured for this type.";
     }
-    else {
-      detail = "Specific detail extraction not configured for this document type.";
-    }
-
-    return detail;
   };
 
   return (
     <div style={{ marginBottom: '2rem' }}>
-      <h3>📥 Upload Document (image)</h3>
+      <h3>📥 Upload Document</h3>
       <input type="file" accept="image/*" onChange={handleFileUpload} />
       {status && <p>Status: {status}</p>}
       {preview && <img src={preview} alt="Preview" width="200" />}

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Navbar.css';
+import './Navbar.css'; // Make sure you have this CSS file
 import { useAuth } from '../../context/AuthContext';
 
 export default function Navbar() {
-  const { user, logout } = useAuth();
+  
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true');
+  const [menuOpen, setMenuOpen] = useState(false); // State for hamburger menu
   const navigate = useNavigate();
+  const { user, logout } = useAuth();  // ✅ use correct function
 
   useEffect(() => {
     document.body.className = darkMode ? 'dark' : '';
@@ -14,32 +16,40 @@ export default function Navbar() {
   }, [darkMode]);
 
   const toggleDarkMode = () => setDarkMode(prev => !prev);
+  
+  // Close menu when a link is clicked
+  const handleLinkClick = () => {
+    setMenuOpen(false);
+  };
 
   const handleLogout = () => {
-    const confirmLogout = window.confirm('Are you sure you want to logout?');
-    if (confirmLogout) {
-      logout();
-      navigate('/login');
-    }
-  };
+  const confirmLogout = window.confirm('Are you sure you want to logout?');
+  if (confirmLogout) {
+    logout();   // ✅ call logoutUser
+    setMenuOpen(false);
+    navigate('/login');
+  }
+};
 
   return (
     <nav className={`navbar ${darkMode ? 'navbar-dark' : ''}`}>
-      
-      <Link to="/" className="logo">MyDigiLocker</Link>
+      <Link to="/" className="logo" onClick={handleLinkClick}>MyDigiLocker</Link>
 
-      <ul className="nav-links">
-        {user && <li><Link to="/dashboard">Dashboard</Link></li>}
+      {/* Hamburger Menu Icon
+      <div className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>
+        {menuOpen ? '✖️' : '☰'}
+      </div> */}
 
-        {!user && <li><Link to="/login">Login</Link></li>}
-        {!user && <li><Link to="/register">Register</Link></li>}
-
+      {/* Add 'active' class when menu is open */}
+      <ul className={`nav-links ${menuOpen ? 'active' : ''}`}>
+        {user && <li><Link to="/dashboard" onClick={handleLinkClick}>Dashboard</Link></li>}
+        {!user && <li><Link to="/login" onClick={handleLinkClick}>Login</Link></li>}
+        {!user && <li><Link to="/register" onClick={handleLinkClick}>Register</Link></li>}
         {user && (
           <li>
             <button onClick={handleLogout} className="logout-btn">Logout</button>
           </li>
         )}
-        
         <li>
           <button onClick={toggleDarkMode} className="toggle-btn">
             {darkMode ? '☀️' : '🌙'}

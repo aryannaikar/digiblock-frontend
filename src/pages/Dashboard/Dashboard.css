@@ -348,6 +348,19 @@ body.dark .modal {
 
 
 
+.loading {
+  color: blue;
+  font-weight: bold;
+}
+
+.message {
+  color: green;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
   
