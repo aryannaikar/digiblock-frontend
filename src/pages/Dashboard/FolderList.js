@@ -2,16 +2,9 @@ import React, { useRef, useState } from 'react';
 import './Dashboard.css';
 
 const ALL_FOLDERS = [
-  "Aadhaar",
-  "PAN",
-  "Passport",
-  "Voter",
-  "Driving License",
-  "Birth Certificate",
-  "10th Marksheet",
-  "12th Marksheet",
-  "Degree Certificate",
-  "Caste Certificate",
+  "Aadhaar", "PAN", "Passport", "Voter", "Driving License",
+  "Birth Certificate", "10th Marksheet", "12th Marksheet",
+  "Degree Certificate", "Caste Certificate"
 ];
 
 const folderColors = [
@@ -32,8 +25,6 @@ export default function FolderList({ documents, onDelete }) {
     }
   };
 
-  
-
   return (
     <div className="scroll-section">
       <button className="scroll-btn left" onClick={() => scroll('left')}>&#8592;</button>
@@ -46,17 +37,39 @@ export default function FolderList({ documents, onDelete }) {
           return (
             <div key={folder} className="card" style={{ backgroundColor: color }}>
               <h4>{folder}</h4>
+
               {doc ? (
                 <>
-                  <p>{doc.name}</p>
+                  <p><strong>{doc.name}</strong></p>
                   <p className="extracted-info">{doc.extractedDetails || "No details extracted"}</p>
-                  <button onClick={() => window.open(`http://localhost:5000/${doc.fileUrl}`, '_blank')}>View</button>
+
+                  {/* IPFS Link */}
+                  {doc.cidUrl && (
+                    <p>
+                      <strong>IPFS:</strong>{" "}
+                      <a href={doc.cidUrl.replace("ipfs://", "https://ipfs.io/ipfs/")} target="_blank" rel="noopener noreferrer">
+                        {doc.cidUrl.split("/").pop()}
+                      </a>
+                    </p>
+                  )}
+
+                  {/* Blockchain Tx Hash */}
+                  {doc.txHash && (
+                    <p>
+                      <strong>Blockchain Tx:</strong>{" "}
+                      <a href={`https://sepolia.etherscan.io/tx/${doc.txHash}`} target="_blank" rel="noopener noreferrer">
+                        {doc.txHash.substring(0, 10)}...
+                      </a>
+                    </p>
+                  )}
+
+                  <button onClick={() => window.open(doc.cidUrl?.replace("ipfs://", "https://ipfs.io/ipfs/"), '_blank')}>View Document</button>
                   <button onClick={() => setSelectedDoc(doc)}>Details</button>
-                  <button onClick={() => onDelete(folder)} className="delete-btn">🗑</button>
+                  <button onClick={() => onDelete(folder)} className="delete-btn">🗑 Delete</button>
                 </>
               ) : (
                 <>
-                  <p className='no-doc'>No document here</p>
+                  <p className='no-doc'>No document uploaded</p>
                   <button disabled className="disabled-btn">View</button>
                 </>
               )}
@@ -67,7 +80,7 @@ export default function FolderList({ documents, onDelete }) {
 
       <button className="scroll-btn right" onClick={() => scroll('right')}>&#8594;</button>
 
-      {/* Modal for showing document details */}
+      {/* Modal for detailed view */}
       {selectedDoc && (
         <div className="modal-overlay" onClick={() => setSelectedDoc(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -76,6 +89,8 @@ export default function FolderList({ documents, onDelete }) {
             <p><strong>Type:</strong> {selectedDoc.type}</p>
             <p><strong>Uploaded:</strong> {new Date(selectedDoc.uploadedAt).toLocaleString()}</p>
             <p><strong>Extracted Details:</strong> {selectedDoc.extractedDetails || "No details available"}</p>
+
+            {/* Full OCR Text */}
             {selectedDoc.extractedData && (
               <div>
                 <p><strong>Full OCR Text:</strong></p>
@@ -86,6 +101,27 @@ export default function FolderList({ documents, onDelete }) {
                 />
               </div>
             )}
+
+            {/* IPFS CID */}
+            {selectedDoc.cidUrl && (
+              <p>
+                <strong>IPFS CID:</strong>{" "}
+                <a href={selectedDoc.cidUrl.replace("ipfs://", "https://ipfs.io/ipfs/")} target="_blank" rel="noopener noreferrer">
+                  {selectedDoc.cidUrl.split("/").pop()}
+                </a>
+              </p>
+            )}
+
+            {/* Blockchain Transaction */}
+            {selectedDoc.txHash && (
+              <p>
+                <strong>Blockchain Tx:</strong>{" "}
+                <a href={`https://sepolia.etherscan.io/tx/${selectedDoc.txHash}`} target="_blank" rel="noopener noreferrer">
+                  {selectedDoc.txHash}
+                </a>
+              </p>
+            )}
+
             <button onClick={() => setSelectedDoc(null)}>Close</button>
           </div>
         </div>

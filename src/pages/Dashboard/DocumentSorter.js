@@ -17,7 +17,7 @@ export default function DocumentSorter({ onSorted }) {
     }
 
     setStatus('Reading document...');
-    setPreview(URL.createObjectURL(file));
+    setPreview(file.type.startsWith("image/") ? URL.createObjectURL(file) : null);
 
     const reader = new FileReader();
     reader.onload = async () => {
@@ -35,19 +35,24 @@ export default function DocumentSorter({ onSorted }) {
 
         const details = extractSpecificDetails(folder, text);
 
-        // Upload file to backend
+        // Prepare formData
         const formData = new FormData();
         formData.append('document', file);
         formData.append('folder', folder);
-        formData.append('extractedData', text); // Full OCR text
-        formData.append('extractedDetails', details); // Specific extracted details
+        formData.append('extractedData', text);
+        formData.append('extractedDetails', details);
 
-        const res = await authAxios.post('/api/upload/add', formData, {
+        setStatus('Uploading to decentralized storage...');
+        const res = await authAxios.post('/api/documents/add', formData, { // ✅ updated route
           headers: { 'Content-Type': 'multipart/form-data' }
         });
 
-        onSorted({ ...res.data.document, details });
-        setStatus(`Uploaded and sorted to "${folder}"`);
+        const uploadedDoc = res.data.document;
+        const cidUrl = res.data.cidUrl;
+        const txHash = res.data.txHash || null;
+
+        onSorted({ ...uploadedDoc, details, cidUrl, txHash });
+        setStatus(`Uploaded "${folder}" successfully!\nIPFS: ${cidUrl}${txHash ? `\nBlockchain Tx: ${txHash}` : ''}`);
       } catch (err) {
         console.error(err);
         setStatus('Upload failed.');
@@ -77,7 +82,7 @@ export default function DocumentSorter({ onSorted }) {
       const match = text.match(/\b\d{4}\s\d{4}\s\d{4}\b/);
       return match ? `Aadhaar Number: ${match[0]}` : "Aadhaar number not found.";
     } else if (folder === "PAN") {
-      let cleaned = text.replace(/\s+/g, "").replace(/0/g,"O").replace(/1/g,"I").replace(/8/g,"B");
+      const cleaned = text.replace(/\s+/g, "").replace(/0/g,"O").replace(/1/g,"I").replace(/8/g,"B");
       const match = cleaned.match(/[A-Z]{5}[0-9]{4}[A-Z]{1}/);
       return match ? `PAN Number: ${match[0]}` : "PAN number not found.";
     } else if (folder === "Passport") {
@@ -94,8 +99,8 @@ export default function DocumentSorter({ onSorted }) {
   return (
     <div style={{ marginBottom: '2rem' }}>
       <h3>📥 Upload Document</h3>
-      <input type="file" accept="image/*" onChange={handleFileUpload} />
-      {status && <p>Status: {status}</p>}
+      <input type="file" accept="image/*,.pdf" onChange={handleFileUpload} />
+      {status && <p style={{ whiteSpace: 'pre-wrap' }}>Status: {status}</p>}
       {preview && <img src={preview} alt="Preview" width="200" />}
     </div>
   );
