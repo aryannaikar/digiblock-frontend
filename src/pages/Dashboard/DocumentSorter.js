@@ -64,18 +64,51 @@ export default function DocumentSorter({ onSorted }) {
 
   const classifyDocument = (text) => {
     const lower = text.toLowerCase();
-    if (lower.includes("aadhaar") || lower.includes("uidai")) return "Aadhaar";
-    if (lower.includes("permanent account number") || lower.includes("pan card")) return "PAN";
-    if (lower.includes("passport")) return "Passport";
-    if (lower.includes("voter id") || lower.includes("election commission")) return "Voter";
-    if (lower.includes("driving license")) return "Driving License";
-    if (lower.includes("birth certificate")) return "Birth Certificate";
-    if (lower.includes("marksheet") && lower.includes("class 10")) return "10th Marksheet";
-    if (lower.includes("marksheet") && lower.includes("class 12")) return "12th Marksheet";
-    if (lower.includes("degree certificate")) return "Degree Certificate";
-    if (lower.includes("caste certificate")) return "Caste Certificate";
+    
+    // Normalize the text: remove extra spaces, special characters, and standardize
+    const normalized = lower.replace(/[^\w\s]|_/g, " ").replace(/\s+/g, " ").trim();
+    
+    // Aadhaar
+    if (/(aadhaar|uidai)/.test(normalized)) return "Aadhaar";
+    
+    // PAN
+    if (/(permanent account number|pan card|pan)/.test(normalized)) return "PAN";
+    
+    // Passport
+    if (/(passport)/.test(normalized)) return "Passport";
+    
+    // Voter ID
+    if (/(voter id|voterid|election commission|electoral card)/.test(normalized)) return "Voter";
+    
+    // Driving License - Improved matching
+    if (/(driving license|driving licence|driver license|driver licence|driving[- ]?lic|dl)/.test(normalized)) return "Driving License";
+    
+    // Birth Certificate
+    if (/(birth certificate|dob certificate|date of birth)/.test(normalized)) return "Birth Certificate";
+    
+    // 10th Marksheet
+    if (/(marksheet|mark sheet)/.test(normalized) && /(class 10|10th|tenth|ssc|secondary)/.test(normalized)) return "10th Marksheet";
+    
+    // 12th Marksheet
+    if (/(marksheet|mark sheet)/.test(normalized) && /(class 12|12th|twelfth|hsc|higher secondary)/.test(normalized)) return "12th Marksheet";
+    
+    // Degree Certificate
+    if (/(degree certificate|graduation|bachelor|master|diploma)/.test(normalized)) return "Degree Certificate";
+    
+    // Caste Certificate
+    if (/(caste certificate|category certificate|sc|st|obc)/.test(normalized)) return "Caste Certificate";
+    
     return null;
-  };
+};
+
+// Test cases for driving license
+console.log(classifyDocument("driving license")); // ✅ "Driving License"
+console.log(classifyDocument("driving licence")); // ✅ "Driving License" 
+console.log(classifyDocument("driver license")); // ✅ "Driving License"
+console.log(classifyDocument("driving-license")); // ✅ "Driving License"
+console.log(classifyDocument("DL document")); // ✅ "Driving License"
+console.log(classifyDocument("Driving License Card")); // ✅ "Driving License"
+console.log(classifyDocument("Driver's License")); // ✅ "Driving License"
 
   const extractSpecificDetails = (folder, text) => {
     if (folder === "Aadhaar") {
