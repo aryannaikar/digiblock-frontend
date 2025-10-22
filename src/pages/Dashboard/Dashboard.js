@@ -11,42 +11,37 @@ export default function Dashboard() {
   const [message, setMessage] = useState('');
   const { user, authAxios } = useAuth();
 
-// Fetch documents
-useEffect(() => {
-  const fetchDocuments = async () => {
-    if (!user) return; // not logged in yet
-    setLoading(true);
-    setMessage(''); // clear previous messages
-    try {
-      const res = await authAxios.get('/api/documents/mydocs'); // ensure this matches server route
-      console.log('Documents response:', res.data); // log full response
-      const docsByFolder = {};
-      res.data.forEach(doc => {
-        docsByFolder[doc.folder] = doc;
-      });
-      setDocuments(docsByFolder);
-    } catch (err) {
-      console.error('Fetch documents error:', err);
+  // Fetch documents
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      if (!user) return;
+      setLoading(true);
+      setMessage('');
+      try {
+        const res = await authAxios.get('/api/documents/mydocs');
+        console.log('Documents response:', res.data);
 
-      if (err.response) {
-        console.error('Status:', err.response.status);
-        console.error('Data:', err.response.data);
-        setMessage(`Error ${err.response.status}: ${err.response.data.error || err.response.data.message || 'Failed to load documents'}`);
-      } else if (err.request) {
-        console.error('Request made but no response received:', err.request);
-        setMessage('No response from server. Is backend running?');
-      } else {
-        console.error('Axios setup error:', err.message);
-        setMessage('Request setup error: ' + err.message);
+        const docsByFolder = {};
+        res.data.forEach(doc => {
+          docsByFolder[doc.folder] = doc; // one document per folder
+        });
+        setDocuments(docsByFolder);
+      } catch (err) {
+        console.error('Fetch documents error:', err);
+        if (err.response) {
+          setMessage(`Error ${err.response.status}: ${err.response.data.error || 'Failed to load documents'}`);
+        } else if (err.request) {
+          setMessage('No response from server. Is backend running?');
+        } else {
+          setMessage('Request setup error: ' + err.message);
+        }
+      } finally {
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  fetchDocuments();
-}, [user, authAxios]);
-
+    fetchDocuments();
+  }, [user, authAxios]);
 
   const handleSorted = (newDoc) => {
     const { folder } = newDoc;
@@ -61,7 +56,7 @@ useEffect(() => {
 
     setLoading(true);
     try {
-      await authAxios.delete(`/api/documents/delete/${doc._id}`); // ✅ updated route
+      await authAxios.delete(`/api/documents/delete/${doc._id}`);
       setDocuments(prev => {
         const updated = { ...prev };
         delete updated[folder];

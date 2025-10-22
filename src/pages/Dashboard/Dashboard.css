@@ -389,3 +389,50 @@ body.dark .modal {
  
 
 }
+
+
+/* Container for links */
+.card p strong {
+  display: inline-block;
+  width: 110px; /* label width */
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Link styling */
+.card p a,
+.modal p a {
+  color: #ffd700; /* gold/yellow for visibility */
+  text-decoration: underline;
+  word-break: break-all; /* handle long hashes */
+  font-size: 0.85rem;
+}
+
+/* Short hash on cards */
+.card p a {
+  max-width: 150px;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Full hash in modal */
+.modal p a {
+  max-width: 100%;
+  white-space: normal;
+  word-wrap: break-word;
+  font-size: 0.9rem;
+}
+
+/* Optional: spacing */
+.card p,
+.modal p {
+  margin: 6px 0;
+}
+
+/* Highlight labels */
+.card p strong,
+.modal p strong {
+  color: #fff;
+}

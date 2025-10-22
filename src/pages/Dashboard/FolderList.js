@@ -44,11 +44,11 @@ export default function FolderList({ documents, onDelete }) {
                   <p className="extracted-info">{doc.extractedDetails || "No details extracted"}</p>
 
                   {/* IPFS Link */}
-                  {doc.cidUrl && (
+                  {doc.nftCid && (
                     <p>
                       <strong>IPFS:</strong>{" "}
-                      <a href={doc.cidUrl.replace("ipfs://", "https://ipfs.io/ipfs/")} target="_blank" rel="noopener noreferrer">
-                        {doc.cidUrl.split("/").pop()}
+                      <a href={doc.nftCid.replace("ipfs://", "https://ipfs.io/ipfs/")} target="_blank" rel="noopener noreferrer">
+                        {doc.nftCid.split("/").pop()}
                       </a>
                     </p>
                   )}
@@ -63,7 +63,7 @@ export default function FolderList({ documents, onDelete }) {
                     </p>
                   )}
 
-                  <button onClick={() => window.open(doc.cidUrl?.replace("ipfs://", "https://ipfs.io/ipfs/"), '_blank')}>View Document</button>
+                  <button onClick={() => window.open(doc.fileUrl, '_blank')}>View Document</button>
                   <button onClick={() => setSelectedDoc(doc)}>Details</button>
                   <button onClick={() => onDelete(folder)} className="delete-btn">🗑 Delete</button>
                 </>
@@ -103,11 +103,11 @@ export default function FolderList({ documents, onDelete }) {
             )}
 
             {/* IPFS CID */}
-            {selectedDoc.cidUrl && (
+            {selectedDoc.nftCid && (
               <p>
                 <strong>IPFS CID:</strong>{" "}
-                <a href={selectedDoc.cidUrl.replace("ipfs://", "https://ipfs.io/ipfs/")} target="_blank" rel="noopener noreferrer">
-                  {selectedDoc.cidUrl.split("/").pop()}
+                <a href={selectedDoc.nftCid.replace("ipfs://", "https://ipfs.io/ipfs/")} target="_blank" rel="noopener noreferrer">
+                  {selectedDoc.nftCid.split("/").pop()}
                 </a>
               </p>
             )}
