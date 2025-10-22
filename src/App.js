@@ -10,7 +10,7 @@ import './App.css';
 import OtpLogin from './pages/OtpLogin/OtpLogin';
 import DocumentSorter from './pages/Dashboard/DocumentSorter';
 import ApiTest from './pages/ApiTest/ApiTest'; // ✅ Added import
-
+import RetrieveDocument from "./pages/RetrieveDocument/RetrieveDocument";
 
 function PrivateRoute({ children }) {
   const { user } = useAuth();
@@ -29,6 +29,7 @@ export default function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/register" element={<Register />} />
             <Route path="/apitest" element={<ApiTest />} /> {/* ✅ Added route */}
+            <Route path="/retrieve-document" element={<RetrieveDocument />} />
             <Route path="/dashboard/sorter" element={
               <PrivateRoute>
                 <DocumentSorter />

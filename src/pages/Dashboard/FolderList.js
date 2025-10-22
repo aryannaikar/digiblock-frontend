@@ -41,9 +41,9 @@ export default function FolderList({ documents, onDelete }) {
               {doc ? (
                 <>
                   <p><strong>{doc.name}</strong></p>
+                  {doc.mainDocNumber && <p><strong>Number:</strong> {doc.mainDocNumber}</p>}
                   <p className="extracted-info">{doc.extractedDetails || "No details extracted"}</p>
 
-                  {/* IPFS Link */}
                   {doc.nftCid && (
                     <p>
                       <strong>IPFS:</strong>{" "}
@@ -53,7 +53,6 @@ export default function FolderList({ documents, onDelete }) {
                     </p>
                   )}
 
-                  {/* Blockchain Tx Hash */}
                   {doc.txHash && (
                     <p>
                       <strong>Blockchain Tx:</strong>{" "}
@@ -65,6 +64,19 @@ export default function FolderList({ documents, onDelete }) {
 
                   <button onClick={() => window.open(doc.fileUrl, '_blank')}>View Document</button>
                   <button onClick={() => setSelectedDoc(doc)}>Details</button>
+
+                  <button
+                    onClick={() => {
+                      // Copy IPFS CID first; fallback to blockchain Tx; fallback to file URL
+                      const linkToCopy = doc.nftCid || doc.txHash || doc.fileUrl;
+                      navigator.clipboard.writeText(linkToCopy)
+                        .then(() => alert(`Copied: ${linkToCopy}`))
+                        .catch(err => console.error("Failed to copy:", err));
+                    }}
+                  >
+                    Copy Share Link
+                  </button>
+
                   <button onClick={() => onDelete(folder)} className="delete-btn">🗑 Delete</button>
                 </>
               ) : (
@@ -80,29 +92,23 @@ export default function FolderList({ documents, onDelete }) {
 
       <button className="scroll-btn right" onClick={() => scroll('right')}>&#8594;</button>
 
-      {/* Modal for detailed view */}
       {selectedDoc && (
         <div className="modal-overlay" onClick={() => setSelectedDoc(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h3>Document Details</h3>
             <p><strong>Name:</strong> {selectedDoc.name}</p>
+            {selectedDoc.mainDocNumber && <p><strong>Number:</strong> {selectedDoc.mainDocNumber}</p>}
             <p><strong>Type:</strong> {selectedDoc.type}</p>
             <p><strong>Uploaded:</strong> {new Date(selectedDoc.uploadedAt).toLocaleString()}</p>
             <p><strong>Extracted Details:</strong> {selectedDoc.extractedDetails || "No details available"}</p>
 
-            {/* Full OCR Text */}
             {selectedDoc.extractedData && (
               <div>
                 <p><strong>Full OCR Text:</strong></p>
-                <textarea 
-                  readOnly 
-                  value={selectedDoc.extractedData} 
-                  style={{width: '100%', height: '100px', marginTop: '10px'}}
-                />
+                <textarea readOnly value={selectedDoc.extractedData} style={{ width: '100%', height: '100px', marginTop: '10px' }} />
               </div>
             )}
 
-            {/* IPFS CID */}
             {selectedDoc.nftCid && (
               <p>
                 <strong>IPFS CID:</strong>{" "}
@@ -112,7 +118,6 @@ export default function FolderList({ documents, onDelete }) {
               </p>
             )}
 
-            {/* Blockchain Transaction */}
             {selectedDoc.txHash && (
               <p>
                 <strong>Blockchain Tx:</strong>{" "}

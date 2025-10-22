@@ -79,6 +79,7 @@ export default function Dashboard() {
       {message && <p className="message">{message}</p>}
       <DocumentSorter onSorted={handleSorted} />
       <FolderList documents={documents} onDelete={handleDelete} />
+      
     </div>
   );
 }

@@ -43,6 +43,9 @@ export default function Navbar() {
       {/* Add 'active' class when menu is open */}
       <ul className={`nav-links ${menuOpen ? 'active' : ''}`}>
         {user && <li><Link to="/dashboard" onClick={handleLinkClick}>Dashboard</Link></li>}
+        
+         <li><Link to="/retrieve-document" onClick={handleLinkClick}>Retrieve Document</Link></li>
+
         {!user && <li><Link to="/login" onClick={handleLinkClick}>Login</Link></li>}
         {!user && <li><Link to="/register" onClick={handleLinkClick}>Register</Link></li>}
         {user && (
