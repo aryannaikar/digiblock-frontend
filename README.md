@@ -1,70 +1,182 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# DigiLocker with Blockchain
 
-## Available Scripts
+A **decentralized document storage and verification system** that allows users to securely upload documents, store them on IPFS, and verify authenticity using a local blockchain (Hardhat).  
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Project Idea
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+DigiLocker-with-Blockchain is a secure web application that enables users to:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Upload personal or official documents (PDF, JPG, etc.).
+- Store documents **decentrally on IPFS**.  
+- Record **document metadata and hashes** on a blockchain for immutability and verification.  
+- Retrieve documents using **CID or transaction hash**.  
+- Verify documents via **transaction confirmations** on the blockchain.  
 
-### `npm test`
+This ensures documents are **tamper-proof, verifiable, and securely stored**.  
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Features
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Beginner-Level
+- User authentication (login/register).  
+- Document upload with basic metadata.  
+- Folder-based organization of documents.  
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Intermediate-Level
+- Document encryption before storage.  
+- IPFS integration for decentralized storage.  
+- Blockchain integration for immutability.  
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Advanced-Level
+- Transaction verification with confirmations.  
+- Real-time status updates: pending, confirmed, verified.  
+- UI support for light/dark mode.  
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Project Architecture
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+\`\`\`
+blockchain-project/
+├─ blockchain/        # Hardhat smart contract project
+│  ├─ contracts/      # Solidity contracts (DocumentRegistry.sol, DocumentStorage.sol)
+│  ├─ scripts/        # Deployment scripts
+│  ├─ artifacts/      # Compiled ABIs
+│  ├─ cache/          # Hardhat compilation cache
+│  ├─ hardhat.config.js
+│  └─ .env
+│
+├─ backend/           # Node.js + Express backend
+│  ├─ models/         # Mongoose schemas (User.js, Document.js)
+│  ├─ routes/         # API routes (authRoutes.js, uploadRoutes.js)
+│  ├─ contracts/      # Copied ABIs from blockchain
+│  ├─ utils/          # Utility functions
+│  └─ temp_uploads/   # Temporary file storage
+│
+└─ frontend/          # React frontend
+   ├─ src/
+   │  ├─ pages/
+   │  │  ├─ Dashboard/
+   │  │  ├─ RetrieveDocument/
+   │  │  ├─ Login/
+   │  │  ├─ Register/
+   │  │  └─ ApiTest/
+   │  ├─ components/
+   │  ├─ context/     # AuthContext.js
+   │  └─ App.js
+   └─ public/
+\`\`\`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Technologies Used
 
-## Learn More
+- **Frontend:** React, CSS, Axios  
+- **Backend:** Node.js, Express, MongoDB, Mongoose  
+- **Blockchain:** Hardhat, ethers.js, Solidity  
+- **Decentralized Storage:** IPFS (Pinata)  
+- **Other:** JWT authentication, Tesseract.js (OCR for documents)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Setup Instructions
 
-### Code Splitting
+### 1️⃣ Clone the repository
+\`\`\`bash
+git clone <repo-url>
+cd blockchain-project
+\`\`\`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 2️⃣ Install dependencies
+\`\`\`bash
+# Blockchain
+cd blockchain
+npm install
 
-### Analyzing the Bundle Size
+# Backend
+cd ../backend
+npm install
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+# Frontend
+cd ../frontend
+npm install
+\`\`\`
 
-### Making a Progressive Web App
+### 3️⃣ Start Hardhat local blockchain
+\`\`\`bash
+cd blockchain
+npx hardhat node
+\`\`\`
+- This spins up a local Ethereum network with pre-funded test accounts.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### 4️⃣ Deploy Smart Contracts
+\`\`\`bash
+npx hardhat run scripts/deploy.js --network localhost
+\`\`\`
+- Note the deployed contract addresses.
 
-### Advanced Configuration
+### 5️⃣ Start Backend
+\`\`\`bash
+cd ../backend
+npm run dev
+\`\`\`
+- Backend runs on \`http://localhost:5000\`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### 6️⃣ Start Frontend
+\`\`\`bash
+cd ../frontend
+npm start
+\`\`\`
+- Frontend runs on \`http://localhost:3000\`.
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## How it Works
 
-### `npm run build` fails to minify
+1. **Upload Document**
+   - User uploads a document via Dashboard.
+   - Document is stored in MongoDB and on **IPFS**.
+   - Blockchain transaction is created with document metadata or hash.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+2. **Retrieve Document**
+   - Enter CID or transaction hash.
+   - Frontend fetches document details from backend.
+   - IPFS file can be previewed directly.
+
+3. **Blockchain Verification**
+   - Each document transaction is mined into a local Hardhat block.
+   - Confirmations increase with subsequent blocks.
+   - Once \`MAX_CONFIRMATIONS\` is reached, document is marked **Verified** ✅.
+
+---
+
+## Key Concepts
+
+- **Mining:** Creating a new block that includes transactions. On Hardhat, can be done manually via \`evm_mine\`.
+- **Confirmations:** Number of blocks added after your transaction block. More confirmations = higher guarantee of finality.
+- **IPFS:** Decentralized storage system. Files are referenced via **CID**.
+- **Hardhat:** Local Ethereum environment for deploying and testing smart contracts.
+
+---
+
+## Notes
+
+- Local blockchain transactions do **not require real Ether**.  
+- On testnet/mainnet, transactions require network Ether and cannot be mined manually.  
+- This project can be extended to store **full document on IPFS**, or just **hashes** for lighter storage.  
+
+---
+
+## Author
+
+*Aryan Naikar*  
+
+---
+
+## License
+
+MIT License
