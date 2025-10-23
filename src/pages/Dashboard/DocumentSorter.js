@@ -113,9 +113,9 @@ export default function DocumentSorter({ onSorted }) {
     if (/(aadhaar|uidai)/.test(normalized)) return "Aadhaar";
     if (/(permanent account number|pan card|pan)/.test(normalized)) return "PAN";
     if (/(passport)/.test(normalized)) return "Passport";
-    if (/(voter id|voterid|election commission|electoral card)/.test(normalized)) return "Voter";
-    if (/(driving license|driving licence|driver license|driver licence|driving[- ]?lic|dl)/.test(normalized)) return "Driving License";
-    if (/(birth certificate|dob certificate|date of birth)/.test(normalized)) return "Birth Certificate";
+    if (/(voter id|voter|voting|voterid|election commission|election|electoral card)/.test(normalized)) return "Voter";
+    if (/(driving license|driving|driving licence|driver|driver licence|driving[- ]?lic|dl)/.test(normalized)) return "Driving License";
+    if (/(birth|birth certificate|dob certificate|date of birth)/.test(normalized)) return "Birth Certificate";
     if (/(marksheet|mark sheet)/.test(normalized) && /(class 10|10th|tenth|ssc|secondary)/.test(normalized)) return "10th Marksheet";
     if (/(marksheet|mark sheet)/.test(normalized) && /(class 12|12th|twelfth|hsc|higher secondary)/.test(normalized)) return "12th Marksheet";
     if (/(degree certificate|graduation|bachelor|master|diploma)/.test(normalized)) return "Degree Certificate";

@@ -16,6 +16,9 @@ export default function FolderList({ documents, onDelete }) {
   const scrollRef = useRef(null);
   const [selectedDoc, setSelectedDoc] = useState(null);
 
+  // Base URL for uploaded files
+  const BASE_URL = "http://localhost:5000"; // ✅ change if backend hosted elsewhere
+
   const scroll = (direction) => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({
@@ -47,7 +50,11 @@ export default function FolderList({ documents, onDelete }) {
                   {doc.nftCid && (
                     <p>
                       <strong>IPFS:</strong>{" "}
-                      <a href={doc.nftCid.replace("ipfs://", "https://ipfs.io/ipfs/")} target="_blank" rel="noopener noreferrer">
+                      <a
+                        href={doc.nftCid.replace("ipfs://", "https://ipfs.io/ipfs/")}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         {doc.nftCid.split("/").pop()}
                       </a>
                     </p>
@@ -56,18 +63,32 @@ export default function FolderList({ documents, onDelete }) {
                   {doc.txHash && (
                     <p>
                       <strong>Blockchain Tx:</strong>{" "}
-                      <a href={`https://sepolia.etherscan.io/tx/${doc.txHash}`} target="_blank" rel="noopener noreferrer">
+                      <a
+                        href={`https://sepolia.etherscan.io/tx/${doc.txHash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         {doc.txHash.substring(0, 10)}...
                       </a>
                     </p>
                   )}
 
-                  <button onClick={() => window.open(doc.fileUrl, '_blank')}>View Document</button>
+                  <button
+                    onClick={() => {
+                      // ✅ Ensure proper backend URL for viewing file
+                      const viewUrl = doc.fileUrl.startsWith('http')
+                        ? doc.fileUrl
+                        : `${BASE_URL}${doc.fileUrl}`;
+                      window.open(viewUrl, '_blank');
+                    }}
+                  >
+                    View Document
+                  </button>
+
                   <button onClick={() => setSelectedDoc(doc)}>Details</button>
 
                   <button
                     onClick={() => {
-                      // Copy IPFS CID first; fallback to blockchain Tx; fallback to file URL
                       const linkToCopy = doc.nftCid || doc.txHash || doc.fileUrl;
                       navigator.clipboard.writeText(linkToCopy)
                         .then(() => alert(`Copied: ${linkToCopy}`))
@@ -105,14 +126,22 @@ export default function FolderList({ documents, onDelete }) {
             {selectedDoc.extractedData && (
               <div>
                 <p><strong>Full OCR Text:</strong></p>
-                <textarea readOnly value={selectedDoc.extractedData} style={{ width: '100%', height: '100px', marginTop: '10px' }} />
+                <textarea
+                  readOnly
+                  value={selectedDoc.extractedData}
+                  style={{ width: '100%', height: '100px', marginTop: '10px' }}
+                />
               </div>
             )}
 
             {selectedDoc.nftCid && (
               <p>
                 <strong>IPFS CID:</strong>{" "}
-                <a href={selectedDoc.nftCid.replace("ipfs://", "https://ipfs.io/ipfs/")} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={selectedDoc.nftCid.replace("ipfs://", "https://ipfs.io/ipfs/")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {selectedDoc.nftCid.split("/").pop()}
                 </a>
               </p>
@@ -121,7 +150,11 @@ export default function FolderList({ documents, onDelete }) {
             {selectedDoc.txHash && (
               <p>
                 <strong>Blockchain Tx:</strong>{" "}
-                <a href={`https://sepolia.etherscan.io/tx/${selectedDoc.txHash}`} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={`https://sepolia.etherscan.io/tx/${selectedDoc.txHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {selectedDoc.txHash}
                 </a>
               </p>
