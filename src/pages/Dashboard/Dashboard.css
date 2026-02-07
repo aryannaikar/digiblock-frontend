@@ -642,18 +642,30 @@ body.dark .hash-box{
 
   /* ---------- cards grid ---------- */
 
-  .card-scroll{
-    grid-template-columns:repeat(2,1fr);   /* ONE card per row */
-    gap:8px;
-    padding:4px;
-  }
+  /* mobile swipe scroll */
+
+.card-scroll{
+  display:flex;
+  overflow-x:auto;
+  overflow-y:auto;
+  gap:0px;
+  padding:6px 4px;
+  scroll-snap-type:y mandatory;
+  -webkit-overflow-scrolling:touch;
+}
+
+/* hide scrollbar */
+.card-scroll::-webkit-scrollbar{
+  display:none;
+}
+
 
   .modern-card{
-    height:auto;
-    min-height:95px;
-    padding:10px;
-    margin:0;
-  }
+  min-width:15%;
+  flex-shrink:0;
+  scroll-snap-align:center;
+}
+
 
   .doc-name{
     font-size:14px;
@@ -663,19 +675,21 @@ body.dark .hash-box{
     font-size:12px;
   }
 
-  .card-actions{
-    gap:6px;
-  }
+.card-actions{
+  margin-top:8px;
+}
 
-  .primary-btn{
-    padding:6px;
-    font-size:12px;
-  }
+.primary-btn{
+  font-size:12px;
+  padding:3px;
+}
 
-  .icon-btn{
-    width:32px;
-    font-size:12px;
-  }
+.icon-btn{
+  width:30px;
+  height:30px;
+  font-size:12px;
+}
+
 
   /* ---------- modal ---------- */
 
