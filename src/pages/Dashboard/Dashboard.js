@@ -13,21 +13,21 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
+  /* FILTER STATE */
+  const [filter, setFilter] = useState("all");
+
   /* ================= FETCH DOCUMENTS ================= */
 
   useEffect(() => {
 
     const fetchDocuments = async () => {
-
       if (!user) return;
 
       setLoading(true);
-      setMessage("");
 
       try {
         const res = await authAxios.get("/api/documents/mydocs");
 
-        // convert array -> folder object
         const docsByFolder = {};
         res.data.forEach(doc => {
           docsByFolder[doc.folder] = doc;
@@ -36,20 +36,8 @@ export default function Dashboard() {
         setDocuments(docsByFolder);
 
       } catch (err) {
-        console.error("Fetch error:", err);
-
-        if (err.response) {
-          setMessage(
-            `Error ${err.response.status}: ${
-              err.response.data.error || "Failed to load documents"
-            }`
-          );
-        } else if (err.request) {
-          setMessage("Backend not responding. Is backend running?");
-        } else {
-          setMessage("Error: " + err.message);
-        }
-
+        console.error(err);
+        setMessage("Failed to load documents");
       } finally {
         setLoading(false);
       }
@@ -62,14 +50,10 @@ export default function Dashboard() {
   /* ================= AFTER UPLOAD ================= */
 
   const handleSorted = (newDoc) => {
-
-    // immediately update card without refresh
     setDocuments(prev => ({
       ...prev,
       [newDoc.folder]: newDoc
     }));
-
-    setMessage(`${newDoc.folder} uploaded & secured on blockchain ✔`);
   };
 
   /* ================= DELETE ================= */
@@ -79,61 +63,86 @@ export default function Dashboard() {
     const doc = documents[folder];
     if (!doc) return;
 
-    const confirmDelete = window.confirm(
-      `Delete ${folder} document permanently?`
-    );
-
-    if (!confirmDelete) return;
-
-    setLoading(true);
+    if (!window.confirm(`Delete ${folder} document?`)) return;
 
     try {
-
       await authAxios.delete(`/api/documents/delete/${doc._id}`);
 
-      // remove from UI instantly
       setDocuments(prev => {
         const updated = { ...prev };
         delete updated[folder];
         return updated;
       });
 
-      setMessage(`${folder} deleted successfully`);
-
     } catch (err) {
       console.error(err);
-      setMessage("Failed to delete document");
-
-    } finally {
-      setLoading(false);
+      setMessage("Delete failed");
     }
   };
 
   /* ================= UI ================= */
 
   return (
-    <div className="dashboard">
+    <div className="dashboard-layout">
 
-      <Banner />
-
-      <div className="dashboard-header">
-        <h2>📂 My DigiBlock Vault</h2>
-        <p className="subtitle">
-          Store and verify documents using decentralized blockchain storage
-        </p>
+      {/* LEFT SIDE - SLIDESHOW */}
+      <div className="left-panel">
+        <Banner />
       </div>
 
-      {loading && <p className="loading">Loading your vault...</p>}
-      {message && <p className="message">{message}</p>}
+      {/* RIGHT SIDE - DASHBOARD */}
+      <div className="right-panel">
 
-      {/* Upload Section */}
-      <DocumentSorter onSorted={handleSorted} />
+        <div className="vault-card">
 
-      {/* Folder Cards */}
-      <FolderList
-        documents={documents}
-        onDelete={handleDelete}
-      />
+          <div className="vault-header">
+
+            <h3>📁 Dashboard</h3>
+
+            {/* FILTER TABS */}
+            <div className="tabs">
+
+              <button
+                className={`tab-btn ${filter === "all" ? "active" : ""}`}
+                onClick={() => setFilter("all")}
+              >
+                All
+              </button>
+
+              <button
+                className={`tab-btn ${filter === "uploaded" ? "active" : ""}`}
+                onClick={() => setFilter("uploaded")}
+              >
+                Uploaded
+              </button>
+
+              <button
+                className={`tab-btn ${filter === "missing" ? "active" : ""}`}
+                onClick={() => setFilter("missing")}
+              >
+                Missing
+              </button>
+
+            </div>
+
+          </div>
+
+          {loading && <p className="loading">Loading documents...</p>}
+          {message && <p className="message">{message}</p>}
+
+          {/* Upload */}
+          <DocumentSorter onSorted={handleSorted} />
+
+          {/* Cards */}
+          <FolderList
+            documents={documents}
+            onDelete={handleDelete}
+            filter={filter}
+          />
+
+        </div>
+
+      </div>
 
     </div>
   );

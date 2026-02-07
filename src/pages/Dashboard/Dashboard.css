@@ -52,11 +52,11 @@ body{
 .dropzone{
   border:2px dashed #00d4ff;
   border-radius:18px;
-  padding:10px 20px;
+  padding:5px 20px;
   cursor:pointer;
   background:rgba(255,255,255,.08);
   transition:.25s;
-  margin-top: 5px;
+ 
 }
 
 .dropzone:hover{
@@ -357,4 +357,442 @@ body.dark .hash-box{
   top:-80px;
   filter:blur(40px);
   z-index:-1;
+}
+
+/* ================= SPLIT SCREEN ================= */
+
+.dashboard-layout{
+  display:flex;
+  height:calc(100vh - 90px);
+  margin-top:90px;
+}
+
+/* LEFT SIDE (banner) */
+
+.left-panel{
+  width:45%;
+  padding:20px;
+}
+
+.left-panel .banner-container{
+  height:100%;
+  border-radius:24px;
+}
+
+/* RIGHT SIDE (dashboard) */
+
+.right-panel{
+  width:55%;
+  padding:20px;
+  overflow:hidden;
+}
+
+/* VAULT CARD */
+
+.vault-card{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  background:linear-gradient(145deg,#5b1aa0,#2d0b52);
+  border-radius:24px;
+  padding:18px;
+  box-shadow:0 30px 70px rgba(0,0,0,.6);
+}
+
+/* upload fixed */
+
+.upload-section{
+  flex-shrink:0;
+}
+
+/* cards container */
+
+.scroll-section{
+  flex:1;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+/* vertical card scroll */
+
+.card-scroll{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:10px;
+  height:100%;
+}
+
+/* scrollbar styling */
+
+.card-scroll::-webkit-scrollbar{
+  width:8px;
+}
+
+.card-scroll::-webkit-scrollbar-thumb{
+  background:#00d4ff;
+  border-radius:10px;
+}
+
+/* mobile */
+
+@media(max-width:900px){
+
+  .dashboard-layout{
+    flex-direction:column;
+    height:auto;
+  }
+
+  .left-panel{
+    width:100%;
+    height:250px;
+  }
+
+  .right-panel{
+    width:100%;
+  }
+
+  .card-scroll{
+    grid-template-columns:1fr;
+  }
+}
+
+/* ===== Compact Upload Box ===== */
+
+.upload-section{
+  margin-bottom:6px;
+}
+
+.dropzone{
+  border:2px dashed #2bdcff;
+  border-radius:12px;
+  padding:12px;
+  min-height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.15);
+  transition:.25s;
+}
+
+.upload-icon{
+  font-size:28px;
+}
+
+.main-text{ font-size:13px; }
+.sub-text{ font-size:11px; }
+.security-line{ font-size:11px; }
+
+/* ===== 3 Cards Per Row ===== */
+
+.card-scroll{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:8px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:4px 6px;
+  height:100%;
+}
+
+/* ===== Smaller Cards ===== */
+
+.modern-card{
+  height:120px;
+  padding:7px;
+  margin: 10px;
+  border-radius:14px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.doc-name{ font-size:14px; }
+.masked-number{ font-size:12px; margin:4px 0; }
+.secure-line{ font-size:10px; }
+
+
+
+
+/* ===== FILTER TABS BUTTONS ===== */
+
+.tabs{
+  display:flex;
+  gap:10px;
+}
+
+/* default button */
+.tab-btn{
+  padding:6px 14px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.08);
+  color:white;
+  cursor:pointer;
+  font-size:13px;
+  transition:.2s;
+}
+
+/* hover */
+.tab-btn:hover{
+  background:rgba(255,255,255,.2);
+}
+
+/* active tab */
+.tab-btn.active{
+  background:#00d4ff;
+  color:black;
+  font-weight:600;
+  border:1px solid #00d4ff;
+}
+
+/* remove default browser button style */
+.tab-btn:focus{
+  outline:none;
+}
+
+/* ======================================================
+   FULL MOBILE RESPONSIVE FIX
+====================================================== */
+
+@media (max-width:768px){
+
+  /* ---------- layout becomes vertical ---------- */
+
+  .dashboard-layout{
+    flex-direction:column;
+    height:auto;
+    margin-top:80px;
+  }
+
+  .left-panel{
+    width:100%;
+    height:220px;
+    padding:10px;
+  }
+
+  .left-panel .banner-container{
+    height:100%;
+  }
+
+  .right-panel{
+    width:100%;
+    padding:10px;
+  }
+
+  /* ---------- vault ---------- */
+
+  .vault-card{
+    padding:12px;
+    border-radius:18px;
+  }
+
+  .vault-header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:8px;
+  }
+
+  .vault-header h3{
+    font-size:16px;
+  }
+
+  /* ---------- filter buttons ---------- */
+
+  .tabs{
+    width:100%;
+    justify-content:space-between;
+  }
+
+  .tab-btn{
+    flex:1;
+    font-size:12px;
+    padding:6px 4px;
+  }
+
+  /* ---------- upload box ---------- */
+
+  .upload-section{
+    margin-bottom:8px;
+  }
+
+  .dropzone{
+    padding:10px;
+    min-height:60px;
+  }
+
+  .upload-icon{
+    font-size:22px;
+  }
+
+  .main-text{
+    font-size:12px;
+  }
+
+  .sub-text{
+    font-size:10px;
+  }
+
+  .security-line{
+    font-size:10px;
+  }
+
+  /* ---------- cards grid ---------- */
+
+  .card-scroll{
+    grid-template-columns:repeat(2,1fr);   /* ONE card per row */
+    gap:8px;
+    padding:4px;
+  }
+
+  .modern-card{
+    height:auto;
+    min-height:95px;
+    padding:10px;
+    margin:0;
+  }
+
+  .doc-name{
+    font-size:14px;
+  }
+
+  .masked-number{
+    font-size:12px;
+  }
+
+  .card-actions{
+    gap:6px;
+  }
+
+  .primary-btn{
+    padding:6px;
+    font-size:12px;
+  }
+
+  .icon-btn{
+    width:32px;
+    font-size:12px;
+  }
+
+  /* ---------- modal ---------- */
+
+  .modal{
+    width:95%;
+    padding:15px;
+  }
+
+  .hash-box{
+    height:70px;
+    font-size:11px;
+  }
+
+}
+
+/* ======================================================
+   LIGHT MODE DASHBOARD
+====================================================== */
+
+/* page background */
+body:not(.dark){
+  background:#eef3f9;
+}
+
+/* vault card becomes white */
+body:not(.dark) .vault-card{
+  background:#ffffff;
+  color:#1a1a1a;
+  box-shadow:0 10px 30px rgba(0,0,0,.12);
+}
+
+/* header text */
+body:not(.dark) .vault-header h3{
+  color:#1a1a1a;
+}
+
+/* tabs */
+body:not(.dark) .tab-btn{
+  background:#f2f5f9;
+  color:#333;
+  border:1px solid #d8dee8;
+}
+
+body:not(.dark) .tab-btn:hover{
+  background:#e6ecf5;
+}
+
+body:not(.dark) .tab-btn.active{
+  background:#007bff;
+  color:white;
+  border:1px solid #007bff;
+}
+
+/* upload box */
+body:not(.dark) .dropzone{
+  background:#f7f9fc;
+  border:2px dashed #007bff;
+}
+
+body:not(.dark) .security-line{
+  color:#007bff;
+}
+
+/* cards */
+body:not(.dark) .modern-card{
+  color:white;
+}
+
+/* action buttons */
+body:not(.dark) .primary-btn{
+  background:#007bff;
+  color:white;
+}
+
+body:not(.dark) .primary-btn:hover{
+  background:#005fd1;
+}
+
+body:not(.dark) .icon-btn{
+  background:rgba(0,0,0,.08);
+  color:#333;
+}
+
+body:not(.dark) .icon-btn.delete{
+  background:#ff4d4d;
+  color:white;
+}
+
+/* modal */
+body:not(.dark) .modal{
+  background:white;
+  color:black;
+}
+
+/* hash box */
+body:not(.dark) .hash-box{
+  background:#f1f3f6;
+  border:1px solid #ccc;
+  color:#111;
+}
+
+body:not(.dark) .banner-container{
+  background:linear-gradient(
+    to right,
+    #cfe5ff,
+    #8fc1ff,
+    #4da3ff,
+    #8fc1ff,
+    #cfe5ff
+  );
+}
+
+body:not(.dark) .doc-name{
+  color:white;
+}
+
+body:not(.dark) .missing-badge{
+  background:rgba(0,0,0,.2);
+  color:white;
 }

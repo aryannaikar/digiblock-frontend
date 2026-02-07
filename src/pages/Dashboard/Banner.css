@@ -4,14 +4,14 @@
 
 .banner-container{
   position:relative;
-  width:100%;
+  width:105%;
   height:420px;
   overflow:hidden;
   border-radius:18px;
   margin-bottom:30px;
 
   background:linear-gradient(
-    to right,
+    to bottom,
     transparent,
     rgb(7,106,255),
     blue,
@@ -42,10 +42,11 @@
 /* arrows */
 
 .arrow{
+  
   position:absolute;
   top:50%;
   transform:translateY(-50%);
-  font-size:26px;
+  font-size:16px;
   color:white;
   background:rgba(0,0,0,.4);
   border:none;
