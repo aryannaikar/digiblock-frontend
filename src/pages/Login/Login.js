@@ -31,7 +31,10 @@ export default function Login() {
           <p className='par'>Enter Your Username:</p>
           <input
             type="text"
+            name="username"
+            autoComplete="username"
             placeholder="Username"
+            value={form.username}
             onChange={e => setForm({ ...form, username: e.target.value })}
             required
           />
@@ -39,7 +42,10 @@ export default function Login() {
           <p className='par'>Enter Your Password:</p>
           <input
             type="password"
+            name="password"
+            autoComplete="current-password"
             placeholder="Password"
+            value={form.password}
             onChange={e => setForm({ ...form, password: e.target.value })}
             required
           />

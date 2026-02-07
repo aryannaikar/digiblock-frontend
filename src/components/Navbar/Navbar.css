@@ -196,5 +196,119 @@ body.dark .menu-btn{
     margin-top:8px;
   }
 
+
+  /* ================= MOBILE NAVBAR (REAL RESPONSIVE) ================= */
+
+.menu-btn{
+  display:none;
+  font-size:28px;
+  background:none;
+  border:none;
+  cursor:pointer;
+  color:black;
+  margin-right:12px;
 }
+
+body.dark .menu-btn{
+  color:white;
+}
+
+/* overlay (background dim) */
+.nav-overlay{
+  display:none;
+}
+
+@media (max-width:768px){
+
+  .navbar{
+    height:60px;
+    border-radius:0;
+    margin-top:0;
+  }
+
+  /* hamburger visible */
+  .menu-btn{
+    display:block;
+  }
+
+  /* hide desktop links */
+  .nav-links{
+    position:fixed;
+    top:0;
+    right:-260px;
+    width:240px;
+    height:100vh;
+
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:flex-start;
+
+    padding:80px 20px;
+    gap:18px;
+
+    background:#ffffff;
+    box-shadow:-4px 0 18px rgba(0,0,0,0.25);
+
+    transition: right 0.35s ease;
+    z-index:1001;
+  }
+
+  body.dark .nav-links{
+    background:#121212;
+  }
+
+  /* slide open */
+  .nav-links.active{
+    right:0;
+  }
+
+  /* overlay when menu open */
+  .nav-overlay{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.45);
+    backdrop-filter:blur(2px);
+    z-index:1000;
+    display:block;
+  }
+
+  /* links styling */
+  .nav-links li{
+    width:100%;
+  }
+
+  .nav-links a{
+    font-size:18px;
+    width:100%;
+    padding:12px 0;
+    margin:0;
+  }
+
+  /* logout button full width */
+  .logout-btn{
+    width:100%;
+    text-align:center;
+    padding:10px;
+    margin-top:10px;
+  }
+
+  /* dark toggle alignment */
+  .toggle-btn{
+    margin-top:10px;
+    transform:none;
+  }
+
+  /* smaller logo */
+  .logo{
+    font-size:20px;
+  }
+}
+
+
+}
+
+
 
