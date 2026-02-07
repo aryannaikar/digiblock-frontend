@@ -2,6 +2,8 @@ import React, { useRef, useState } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import "./Dashboard.css";
 
+/* ================= DOCUMENT TYPES ================= */
+
 const ALL_FOLDERS = [
   "Aadhaar",
   "PAN",
@@ -29,95 +31,119 @@ const folderColors = [
 ];
 
 export default function FolderList({ documents, onDelete }) {
-  const scrollRef = useRef(null);
 
+  const scrollRef = useRef(null);
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [qrDoc, setQrDoc] = useState(null);
 
   const BASE_URL = "http://localhost:5000";
 
-  // horizontal scroll
-  const scroll = (direction) => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({
-        left: direction === "left" ? -250 : 250,
-        behavior: "smooth",
-      });
-    }
+  /* ================= SCROLL ================= */
+
+  const scroll = (dir) => {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollBy({
+      left: dir === "left" ? -260 : 260,
+      behavior: "smooth",
+    });
   };
 
-  // 🔐 Smart Form QR payload
+  /* ================= QR PAYLOAD ================= */
+
   const generateQrPayload = (doc) => {
     return btoa(
       JSON.stringify({
         documentId: doc._id,
         folder: doc.folder,
         issuer: "DigiBlock",
-        version: "v0",
+        version: "v1",
       })
     );
   };
 
+  /* ================= MASK NUMBER ================= */
+
+  const maskNumber = (num) => {
+    if (!num) return "Number hidden";
+    return "**** **** " + num.slice(-4);
+  };
+
   return (
     <div className="scroll-section">
+
       <button className="scroll-btn left" onClick={() => scroll("left")}>
         &#8592;
       </button>
 
       <div className="card-scroll" ref={scrollRef}>
+
         {ALL_FOLDERS.map((folder, idx) => {
+
           const doc = documents[folder];
           const color = folderColors[idx % folderColors.length];
 
           return (
-            <div key={folder} className="card" style={{ backgroundColor: color }}>
-              <h4>{folder}</h4>
+            <div key={folder} className="card modern-card" style={{ backgroundColor: color }}>
 
+              {/* ===== TOP ===== */}
+              <div className="card-top">
+                <h4 className="doc-name">{folder}</h4>
+
+                {doc ? (
+                  <span className="verified-badge">✔ Verified</span>
+                ) : (
+                  <span className="missing-badge">Not Uploaded</span>
+                )}
+              </div>
+
+              {/* ===== MIDDLE ===== */}
               {doc ? (
-                <>
-                  {/* Uploaded Badge */}
-                  <div className="upload-badge">✓ Uploaded</div>
+                <div className="card-middle">
+                  <p className="masked-number">{maskNumber(doc.mainDocNumber)}</p>
+                  <p className="secure-line">🔐 Secured on Blockchain</p>
+                </div>
+              ) : (
+                <div className="card-middle empty">
+                  <p>No document uploaded yet</p>
+                  <span>Upload to enable verification</span>
+                </div>
+              )}
 
-                  <p style={{ marginTop: "15px", fontWeight: "bold" }}>
-                    Verified Document Stored
-                  </p>
+              {/* ===== ACTIONS ===== */}
+              {doc && (
+                <div className="card-actions">
 
                   {/* View */}
                   <button
+                    className="primary-btn"
                     onClick={() => {
-                      const viewUrl = doc.fileUrl.startsWith("http")
+                      const url = doc.fileUrl.startsWith("http")
                         ? doc.fileUrl
                         : `${BASE_URL}${doc.fileUrl}`;
-                      window.open(viewUrl, "_blank");
+                      window.open(url, "_blank");
                     }}
                   >
-                    View Document
+                    View
                   </button>
 
                   {/* Details */}
-                  <button onClick={() => setSelectedDoc(doc)}>
-                    Details
+                  <button className="icon-btn" onClick={() => setSelectedDoc(doc)}>
+                    ℹ
                   </button>
 
                   {/* QR */}
-                  <button onClick={() => setQrDoc(doc)}>
-                    📄 Smart Form QR
+                  <button className="icon-btn" onClick={() => setQrDoc(doc)}>
+                    QR
                   </button>
 
                   {/* Delete */}
-                  <button
-                    onClick={() => onDelete(folder)}
-                    className="delete-btn"
-                  >
-                    🗑 Delete
+                  <button className="icon-btn delete" onClick={() => onDelete(folder)}>
+                    🗑
                   </button>
-                </>
-              ) : (
-                <>
-                  <p className="no-doc">No document uploaded</p>
-                  <button disabled className="disabled-btn">View</button>
-                </>
+
+                </div>
               )}
+
             </div>
           );
         })}
@@ -128,20 +154,22 @@ export default function FolderList({ documents, onDelete }) {
       </button>
 
       {/* ================= QR MODAL ================= */}
+
       {qrDoc && (
         <div className="modal-overlay" onClick={() => setQrDoc(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h3>Smart Form QR</h3>
+
+            <h3>Verified Smart QR</h3>
 
             {(() => {
               const payload = generateQrPayload(qrDoc);
 
               return (
                 <>
-                  <QRCodeCanvas value={payload} size={280} level="H" />
+                  <QRCodeCanvas value={payload} size={260} level="H" />
 
-                  <p style={{ marginTop: "10px", fontSize: "0.9rem" }}>
-                    Scan or copy this QR value to auto-fill verified form fields
+                  <p style={{ marginTop: "10px" }}>
+                    Scan this QR to auto-fill verified document details
                   </p>
 
                   <button
@@ -153,38 +181,27 @@ export default function FolderList({ documents, onDelete }) {
                     📋 Copy QR Value
                   </button>
 
-                  <p
-                    style={{
-                      fontSize: "0.75rem",
-                      marginTop: "8px",
-                      wordBreak: "break-all",
-                    }}
-                  >
-                    {payload.substring(0, 60)}...
-                  </p>
-
                   <button onClick={() => setQrDoc(null)}>Close</button>
                 </>
               );
             })()}
+
           </div>
         </div>
       )}
 
       {/* ================= DETAILS MODAL ================= */}
+
       {selectedDoc && (
         <div className="modal-overlay" onClick={() => setSelectedDoc(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h3>Document Details</h3>
 
-            <p>
-              <strong>Name:</strong> {selectedDoc.name}
-            </p>
+            <h3>Document Verification Details</h3>
+
+            <p><strong>Document:</strong> {selectedDoc.folder}</p>
 
             {selectedDoc.mainDocNumber && (
-              <p>
-                <strong>Number:</strong> {selectedDoc.mainDocNumber}
-              </p>
+              <p><strong>Number:</strong> {selectedDoc.mainDocNumber}</p>
             )}
 
             <p>
@@ -192,14 +209,15 @@ export default function FolderList({ documents, onDelete }) {
               {new Date(selectedDoc.uploadedAt).toLocaleString()}
             </p>
 
-            {/* BLOCKCHAIN SECTION */}
             <hr style={{ margin: "15px 0" }} />
-            <h4>🔐 Blockchain Verification</h4>
 
-            {/* TX HASH */}
+            <h4>🔐 Blockchain Proof</h4>
+
+            {/* ===== TX HASH ===== */}
             {selectedDoc.txHash && (
               <div className="verify-box">
-                <label>Transaction Hash:</label>
+
+                <label>Transaction Hash</label>
 
                 <textarea
                   readOnly
@@ -208,6 +226,7 @@ export default function FolderList({ documents, onDelete }) {
                 />
 
                 <div className="verify-actions">
+
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(selectedDoc.txHash);
@@ -227,25 +246,28 @@ export default function FolderList({ documents, onDelete }) {
                   >
                     🔎 View on Etherscan
                   </button>
+
                 </div>
               </div>
             )}
 
-            {/* CID */}
-            {selectedDoc.cid && (
+            {/* ===== CID ===== */}
+            {selectedDoc.cidUrl && (
               <div className="verify-box">
-                <label>IPFS CID:</label>
+
+                <label>IPFS File (CID)</label>
 
                 <textarea
                   readOnly
-                  value={selectedDoc.cid}
+                  value={selectedDoc.cidUrl}
                   className="hash-box"
                 />
 
                 <div className="verify-actions">
+
                   <button
                     onClick={() => {
-                      navigator.clipboard.writeText(selectedDoc.cid);
+                      navigator.clipboard.writeText(selectedDoc.cidUrl);
                       alert("CID copied!");
                     }}
                   >
@@ -253,23 +275,20 @@ export default function FolderList({ documents, onDelete }) {
                   </button>
 
                   <button
-                    onClick={() =>
-                      window.open(`https://ipfs.io/ipfs/${selectedDoc.cid}`, "_blank")
-                    }
+                    onClick={() => window.open(selectedDoc.cidUrl, "_blank")}
                   >
                     🌐 Open on IPFS
                   </button>
+
                 </div>
               </div>
             )}
 
-            {/* OCR */}
+            {/* OCR TEXT */}
             {selectedDoc.extractedData && (
               <>
                 <hr style={{ margin: "15px 0" }} />
-                <p>
-                  <strong>Full OCR Text:</strong>
-                </p>
+                <p><strong>Extracted OCR Text:</strong></p>
                 <textarea
                   readOnly
                   value={selectedDoc.extractedData}
@@ -279,9 +298,11 @@ export default function FolderList({ documents, onDelete }) {
             )}
 
             <button onClick={() => setSelectedDoc(null)}>Close</button>
+
           </div>
         </div>
       )}
+
     </div>
   );
 }

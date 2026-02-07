@@ -1,438 +1,360 @@
-/* General Reset and Font */
-body,
-h1,
-h2,
-h3,
-p,
-ul,
-li {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* ======================================================
+   GLOBAL RESET
+====================================================== */
+
+*{
+  box-sizing:border-box;
 }
 
-/* Container */
-.dashboard {
-  max-width: 1600px;
-  margin: 30px auto;
-  padding: 30px;
-  background: transparent;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-  border-radius: 16px;
-  border: 1px solid #dce3ed;
-  margin-top: 100px;
-  background-image: radial-gradient(white,purple);
-
-
+body{
+  margin:0;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Headings */
-.dashboard h2 {
-  text-align: center;
-  font-size: 28px;
-  color: #1f2937;
-  margin-bottom: 25px;
+/* ======================================================
+   DASHBOARD CONTAINER
+====================================================== */
+
+.dashboard{
+  max-width:1400px;
+  margin:90px auto 40px auto;
+  padding:30px;
+  border-radius:18px;
+  border:1px solid #dce3ed;
+  background: radial-gradient(white, purple);
+  box-shadow:0 8px 20px rgba(0,0,0,.06);
 }
 
-h3 {
-  font-size: 20px;
-  color: #374151;
-  margin-bottom: 15px;
+.dashboard-header{
+  text-align:center;
+  margin-bottom:25px;
 }
 
-/* File Upload */
-input[type="file"] {
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: #fff;
-  border: 2px dashed #0073ff;
-  box-shadow: 2px 2px 15px  #0073ff;
-  border-radius: 10px;
-  cursor: pointer;
+.dashboard h2{
+  font-size:28px;
+  margin-bottom:6px;
+  color:#1f2937;
 }
 
-/* Status & Preview */
-p {
-  margin: 10px 0;
-  color: #475569;
+.subtitle{
+  opacity:.7;
 }
 
-img {
-  margin-top: 10px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  width: 200px;
+/* ======================================================
+   UPLOAD DROPZONE
+====================================================== */
+
+.upload-section{
+  text-align:center;
+  margin-bottom:35px;
 }
 
-/* Uploaded List */
-ul {
-  list-style-type: none;
-  padding-left: 0;
-  margin-top: 15px;
+.dropzone{
+  border:2px dashed #00d4ff;
+  border-radius:18px;
+  padding:10px 20px;
+  cursor:pointer;
+  background:rgba(255,255,255,.08);
+  transition:.25s;
+  margin-top: 5px;
 }
 
-/* li {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  padding: 15px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-} */
-
-/* Document Name & Size */
-li strong {
-  color: #1d4ed8;
+.dropzone:hover{
+  transform:translateY(-3px);
+  box-shadow:0 0 25px rgba(0,212,255,.6);
 }
 
-li span {
-  font-size: 14px;
-  color: #64748b;
+.upload-icon{
+  font-size:50px;
 }
 
-/* Buttons */
-button {
-  background-color: #2563eb;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 14px;
-  font-size: 14px;
-  cursor: pointer;
-  margin-left: 8px;
-  transition: background-color 0.2s ease;
+.security-line{
+  margin-top:10px;
+  color:#7df9ff;
 }
 
-
-
-button[style*="red"] {
-  background-color: #ffffff;
-  border: solid red 1px;
+.preview{
+  margin-top:15px;
+  width:220px;
+  border-radius:12px;
 }
 
-button[style*="red"]:hover {
-  background-color: #b91c1c;
-  color: white;
-  border: solid white 1px;
+/* ======================================================
+   SCROLL AREA
+====================================================== */
+
+.scroll-section{
+  position:relative;
+  display:flex;
+  align-items:center;
 }
 
-
-
-/* ///////////////////////////// */
-
-
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  justify-content: center;
+.card-scroll{
+  display:flex;
+  gap:16px;
+  overflow-x:auto;
+  scroll-behavior:smooth;
+  padding:12px;
 }
 
-.card {
-  width: 220px;
-  padding: 1rem;
-  border-radius: 10px;
-  color: white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+.card-scroll::-webkit-scrollbar{
+  display:none;
 }
 
-.card h4 {
-  margin-bottom: 10px;
+/* ======================================================
+   DOCUMENT CARD
+====================================================== */
+
+.modern-card{
+  min-width:240px;
+  border-radius:18px;
+  padding:18px;
+  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  transition:.25s;
+  box-shadow:0 4px 10px rgba(0,0,0,.25);
 }
 
-.card button {
-  margin-top: 10px;
-  padding: 6px 10px;
-  background-color: white;
-  color: black;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+.modern-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 20px 40px rgba(0,0,0,.45);
 }
 
-.card button:hover:not(.disabled-btn) {
-  background-color: #e0e0e0;
+.card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-.disabled-btn {
-  background-color: #ccc;
-  color: #555;
-  cursor: not-allowed;
+.doc-name{
+  font-size:18px;
+  font-weight:600;
 }
 
-.delete-btn {
-  background-color: red;
-  color: white;
-  margin-left: 5px;
+.verified-badge{
+  background:#00ffa6;
+  color:black;
+  padding:4px 10px;
+  border-radius:12px;
+  font-size:12px;
 }
 
-
-
-
-.scroll-section {
-  position: relative;
-  display: flex;
-  align-items: center;
-  margin-top: 2rem;
+.missing-badge{
+  background:rgba(255,255,255,.3);
+  padding:4px 10px;
+  border-radius:12px;
+  font-size:12px;
 }
 
-.card-scroll {
-  display: flex;
-  overflow-x: auto;
-  gap: 1rem;
-  scroll-behavior: smooth;
-  padding: 10px;
-  scrollbar-width: none;
-  /* Firefox */
+.masked-number{
+  font-family:monospace;
+  letter-spacing:2px;
+  margin:12px 0;
 }
 
-.card-scroll::-webkit-scrollbar {
-  display: none;
-  /* Chrome, Safari */
+.secure-line{
+  font-size:13px;
+  opacity:.85;
 }
 
-.card {
-  min-width: 220px;
-  flex-shrink: 0;
-  padding: 1rem;
-  border-radius: 10px;
-  color: white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+/* ======================================================
+   BUTTONS
+====================================================== */
+
+button{
+  cursor:pointer;
+  border:none;
+  border-radius:10px;
+  padding:8px 12px;
+  font-size:14px;
 }
 
-.card h4 {
-  margin-bottom: 10px;
+.card-actions{
+  display:flex;
+  gap:8px;
+  margin-top:15px;
 }
 
-.card button {
-  margin-top: 10px;
-  padding: 6px 10px;
-  background-color: white;
-  color: black;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+.primary-btn{
+  flex:1;
+  background:white;
+  color:black;
+  font-weight:600;
 }
 
-.card button:hover:not(.disabled-btn) {
-  background-color: #e0e0e0;
+.primary-btn:hover{
+  background:#00d4ff;
+  color:black;
 }
 
-.disabled-btn {
-  background-color: #ccc;
-  color: #555;
-  cursor: not-allowed;
+.icon-btn{
+  width:40px;
+  background:rgba(255,255,255,.25);
+  color:white;
 }
 
-.delete-btn {
-  background-color: red;
-  color: white;
-  margin-left: 5px;
+.icon-btn.delete{
+  background:#ff4d4d;
 }
 
-.scroll-btn {
-  background-color: #333;
-  color: white;
-  font-size: 1.5rem;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  z-index: 10;
-  border-radius: 50%;
-  margin: 0 10px;
+.icon-btn.delete:hover{
+  background:#ff0000;
 }
 
-.scroll-btn.left {
-  margin-right: -10px;
+/* ======================================================
+   SCROLL BUTTON
+====================================================== */
+
+.scroll-btn{
+  background:#333;
+  color:white;
+  font-size:20px;
+  border-radius:50%;
+  width:42px;
+  height:42px;
 }
 
-.scroll-btn.right {
-  margin-left: -10px;
+/* ======================================================
+   MODAL
+====================================================== */
+
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
 }
 
-
-.no-doc {
-  color: white;
+.modal{
+  background:white;
+  color:black;
+  padding:20px;
+  border-radius:12px;
+  width:90%;
+  max-width:420px;
 }
 
-/* Dark Mode Overrides */
-body.dark .dashboard {
-  background-image: radial-gradient(rgb(0, 0, 0), purple);
-  color: white;
-  border: 1px solid #555;
-  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.06);
+.modal h3{
+  margin-bottom:10px;
 }
 
-body.dark h2,
-body.dark h3,
-body.dark p,
-body.dark li strong,
-body.dark li span {
-  color: white;
+/* ======================================================
+   BLOCKCHAIN DETAILS
+====================================================== */
+
+.verify-box{
+  margin-top:14px;
 }
 
-body.dark input[type="file"] {
-  background-color: #222;
-  color: white;
-  border-color: #888;
-  box-shadow: 2px 2px 15px rgb(251, 89, 251);
+.hash-box{
+  width:100%;
+  height:80px;
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  resize:none;
+  font-size:12px;
 }
 
-body.dark .card {
-  background-color: #222;
-  color: white;
+.verify-actions{
+  display:flex;
+  gap:10px;
+  margin-top:8px;
 }
 
-body.dark .card button {
-  background-color: white;
-  color: black;
+.verify-actions button{
+  flex:1;
+  background:#111;
+  color:white;
 }
 
-body.dark .delete-btn {
-  background-color: #ff4d4d;
+.verify-actions button:hover{
+  background:#333;
 }
 
-body.dark .scroll-btn {
-  background-color: white;
-  color: black;
+/* ======================================================
+   STATUS TEXT
+====================================================== */
+
+.loading{
+  color:blue;
+  font-weight:bold;
 }
 
-body.dark .no-doc {
-  color: #ccc;
+.message{
+  color:green;
+  font-weight:bold;
 }
 
+/* ======================================================
+   DARK MODE
+====================================================== */
 
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
+body.dark .dashboard{
+  background: radial-gradient(rgb(0,0,0), purple);
+  color:white;
+  border:1px solid #555;
 }
 
-
-.modal {
-  background: rgb(255, 255, 255);
-  padding: 20px;
-  border-radius: 8px;
-  max-width: 400px;
-  width: 90%;
-  border: rgb(0, 0, 0) 2px solid;
+body.dark .modal{
+  background:#101010;
+  color:white;
 }
 
-body.dark .modal {
-  background: rgb(16, 16, 16);
-  padding: 20px;
-  border-radius: 8px;
-  max-width: 400px;
-  width: 90%;
-  border: white 1px solid;
+body.dark .hash-box{
+  background:#222;
+  color:white;
+  border:1px solid #666;
 }
 
-.modal button {
-  margin-top: 10px;
-}
+/* ======================================================
+   MOBILE FIX
+====================================================== */
 
+@media(max-width:768px){
 
-
-.loading {
-  color: blue;
-  font-weight: bold;
-}
-
-.message {
-  color: green;
-  font-weight: bold;
-  margin: 10px 0;
-}
-
-
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  
   .dashboard{
-    width: 125%;
-  }
-  
-  .card-scroll {
-    width: 80%;
+    margin-top:70px;
+    padding:18px;
   }
 
-  .scroll-section {
-    width: 150%;
-    position: relative;
-    right: 40px;
+  .scroll-btn{
+    display:none;
   }
 
-  .card {
-    width: 40%;
+  .modern-card{
+    min-width:200px;
   }
 
-  .scroll-btn {
-    display: none;
-  }
-
- 
-
 }
 
-
-/* Container for links */
-.card p strong {
-  display: inline-block;
-  width: 110px; /* label width */
-  font-weight: 600;
-  color: #fff;
+.dropzone.drag-active{
+  box-shadow:0 0 30px #00d4ff;
+  transform:scale(1.02);
+  background:rgba(0,212,255,.1);
 }
 
-/* Link styling */
-.card p a,
-.modal p a {
-  color: #ffd700; /* gold/yellow for visibility */
-  text-decoration: underline;
-  word-break: break-all; /* handle long hashes */
-  font-size: 0.85rem;
+.hero-left{
+  flex:1;
+  color:white;
+  padding-left:20px;
+  position:relative;
 }
 
-/* Short hash on cards */
-.card p a {
-  max-width: 150px;
-  display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Full hash in modal */
-.modal p a {
-  max-width: 100%;
-  white-space: normal;
-  word-wrap: break-word;
-  font-size: 0.9rem;
-}
-
-/* Optional: spacing */
-.card p,
-.modal p {
-  margin: 6px 0;
-}
-
-/* Highlight labels */
-.card p strong,
-.modal p strong {
-  color: #fff;
+/* blue aura behind text */
+.hero-left::before{
+  content:"";
+  position:absolute;
+  width:420px;
+  height:420px;
+  background:radial-gradient(circle,#00d4ff55,transparent 70%);
+  left:-120px;
+  top:-80px;
+  filter:blur(40px);
+  z-index:-1;
 }

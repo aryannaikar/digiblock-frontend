@@ -4,9 +4,11 @@ import './Navbar.css';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Navbar() {
+
   const [darkMode, setDarkMode] = useState(
     () => localStorage.getItem('darkMode') === 'true'
   );
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -34,13 +36,23 @@ export default function Navbar() {
 
   return (
     <nav className={`navbar ${darkMode ? 'navbar-dark' : ''}`}>
+
+      {/* LOGO */}
       <Link to="/" className="logo" onClick={handleLinkClick}>
         MyDigiLocker
       </Link>
 
+      {/* MOBILE MENU BUTTON */}
+      <button
+        className="menu-btn"
+        onClick={() => setMenuOpen(prev => !prev)}
+      >
+        ☰
+      </button>
+
+      {/* NAV LINKS */}
       <ul className={`nav-links ${menuOpen ? 'active' : ''}`}>
 
-        {/* ---------- PRIVATE ---------- */}
         {user && (
           <li>
             <Link to="/dashboard" onClick={handleLinkClick}>
@@ -49,7 +61,6 @@ export default function Navbar() {
           </li>
         )}
 
-        {/* ---------- PUBLIC ---------- */}
         <li>
           <Link to="/smart-form" onClick={handleLinkClick}>
             Smart Form
@@ -91,6 +102,7 @@ export default function Navbar() {
             {darkMode ? '☀️' : '🌙'}
           </button>
         </li>
+
       </ul>
     </nav>
   );

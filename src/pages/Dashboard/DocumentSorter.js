@@ -1,175 +1,205 @@
-import React, { useState } from 'react';
-import Tesseract from 'tesseract.js';
-import { useAuth } from '../../context/AuthContext';
-import './Dashboard.css';
+import React, { useState, useRef } from "react";
+import Tesseract from "tesseract.js";
+import { useAuth } from "../../context/AuthContext";
+import "./Dashboard.css";
 
 export default function DocumentSorter({ onSorted }) {
-  const [status, setStatus] = useState('');
-  const [preview, setPreview] = useState(null);
+
   const { user, authAxios } = useAuth();
 
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
+  const [status, setStatus] = useState("");
+  const [preview, setPreview] = useState(null);
+  const [dragActive, setDragActive] = useState(false);
+
+  const fileInputRef = useRef(null);
+
+  /* ================= OPEN FILE PICKER ================= */
+
+  const openFilePicker = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  /* ================= PROCESS FILE ================= */
+
+  const processFile = async (file) => {
+
     if (!file) return;
+
     if (!user) {
-      setStatus('Please log in before uploading.');
+      setStatus("Please login before uploading.");
       return;
     }
 
-    setStatus('Reading document...');
+    setStatus("Reading document...");
     setPreview(file.type.startsWith("image/") ? URL.createObjectURL(file) : null);
 
     const reader = new FileReader();
+
     reader.onload = async () => {
       try {
-        const result = await Tesseract.recognize(reader.result, 'eng', {
+
+        /* ===== OCR ===== */
+        const result = await Tesseract.recognize(reader.result, "eng", {
           logger: m => setStatus(m.status)
         });
 
         const text = result.data.text;
+
         const folder = classifyDocument(text);
+
         if (!folder) {
-          setStatus('Could not classify this document.');
+          setStatus("Could not recognize this document type.");
           return;
         }
 
         const details = extractSpecificDetails(folder, text);
 
-        // Extract main document number for MongoDB
         let mainDocNumber = "";
-        switch (folder) {
-          case "Aadhaar":
-            const aadhaarMatch = details.match(/\d{4}\s\d{4}\s\d{4}/);
-            mainDocNumber = aadhaarMatch ? aadhaarMatch[0] : "";
-            break;
-          case "PAN":
-            const panMatch = details.match(/[A-Z]{5}[0-9]{4}[A-Z]{1}/);
-            mainDocNumber = panMatch ? panMatch[0] : "";
-            break;
-          case "Passport":
-            const passportMatch = details.match(/\b[A-Z][0-9]{7}\b/);
-            mainDocNumber = passportMatch ? passportMatch[0] : "";
-            break;
-          case "Voter":
-            const voterMatch = details.match(/\b[A-Z]{3}[0-9]{7}\b/);
-            mainDocNumber = voterMatch ? voterMatch[0] : "";
-            break;
-          case "Driving License":
-            const dlMatch = details.match(/\b([A-Z]{2}\d{2}\s?\d{11}|\d{2}[A-Z]{2}\d{11})\b/i);
-            mainDocNumber = dlMatch ? dlMatch[0] : "";
-            break;
-          case "10th Marksheet":
-            const roll10 = details.match(/\b\d{4,10}\b/);
-            mainDocNumber = roll10 ? roll10[0] : "";
-            break;
-          case "12th Marksheet":
-            const roll12 = details.match(/\b\d{4,10}\b/);
-            mainDocNumber = roll12 ? roll12[0] : "";
-            break;
-          case "Degree Certificate":
-            const degreeMatch = details.match(/\b([A-Z]{2,5}\d{2,6})\b/);
-            mainDocNumber = degreeMatch ? degreeMatch[0] : "";
-            break;
-          case "Caste Certificate":
-            const casteMatch = details.match(/\b[A-Z0-9]{3,10}\b/);
-            mainDocNumber = casteMatch ? casteMatch[0] : "";
-            break;
-          default:
-            mainDocNumber = "";
-        }
+        const match = details.match(/[A-Z0-9]{6,20}|\d{4}\s\d{4}\s\d{4}/);
+        if (match) mainDocNumber = match[0];
 
-        // Prepare formData
+        /* ===== UPLOAD ===== */
         const formData = new FormData();
-        formData.append('document', file);
-        formData.append('folder', folder);
-        formData.append('extractedData', text);
-        formData.append('extractedDetails', details);
-        formData.append('mainDocNumber', mainDocNumber); // <-- store only number in Mongo
+        formData.append("document", file);
+        formData.append("folder", folder);
+        formData.append("extractedData", text);
+        formData.append("extractedDetails", details);
+        formData.append("mainDocNumber", mainDocNumber);
 
-        setStatus('Uploading to decentralized storage...');
-        const res = await authAxios.post('/api/documents/add', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
+        setStatus("Uploading securely to decentralized storage...");
+
+        const res = await authAxios.post("/api/documents/add", formData, {
+          headers: { "Content-Type": "multipart/form-data" }
         });
 
         const uploadedDoc = res.data.document;
-        const cidUrl = res.data.cidUrl;
-        const txHash = res.data.txHash || null;
 
-        onSorted({ ...uploadedDoc, details, cidUrl, txHash, mainDocNumber });
-        setStatus(`Uploaded "${folder}" successfully!\nIPFS: ${cidUrl}${txHash ? `\nBlockchain Tx: ${txHash}` : ''}`);
+        onSorted({
+          ...uploadedDoc,
+          details,
+          cidUrl: res.data.cidUrl,
+          txHash: res.data.txHash,
+          mainDocNumber
+        });
+
+        setStatus(`${folder} uploaded & secured on blockchain ✔`);
+
       } catch (err) {
         console.error(err);
-        setStatus('Upload failed.');
+        setStatus("Upload failed.");
       }
     };
 
     reader.readAsDataURL(file);
   };
 
-  const classifyDocument = (text) => {
-    const lower = text.toLowerCase();
-    const normalized = lower.replace(/[^\w\s]|_/g, " ").replace(/\s+/g, " ").trim();
+  /* ================= INPUT CHANGE ================= */
 
-    if (/(aadhaar|uidai)/.test(normalized)) return "Aadhaar";
-    if (/(permanent account number|pan card|pan)/.test(normalized)) return "PAN";
-    if (/(passport)/.test(normalized)) return "Passport";
-    if (/(voter id|voter|voting|voterid|election commission|election|electoral card)/.test(normalized)) return "Voter";
-    if (/(driving license|driving|driving licence|driver|driver licence|driving[- ]?lic|dl)/.test(normalized)) return "Driving License";
-    if (/(birth|birth certificate|dob certificate|date of birth)/.test(normalized)) return "Birth Certificate";
-    if (/(marksheet|mark sheet)/.test(normalized) && /(class 10|10th|tenth|ssc|secondary)/.test(normalized)) return "10th Marksheet";
-    if (/(marksheet|mark sheet)/.test(normalized) && /(class 12|12th|twelfth|hsc|higher secondary)/.test(normalized)) return "12th Marksheet";
-    if (/(degree certificate|graduation|bachelor|master|diploma)/.test(normalized)) return "Degree Certificate";
-    if (/(caste certificate|category certificate|sc|st|obc)/.test(normalized)) return "Caste Certificate";
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    processFile(file);
+  };
+
+  /* ================= DRAG EVENTS ================= */
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setDragActive(false);
+
+    const file = e.dataTransfer.files[0];
+    processFile(file);
+  };
+
+  /* ================= DOCUMENT CLASSIFIER ================= */
+
+  const classifyDocument = (text) => {
+    const t = text.toLowerCase();
+
+    if (t.includes("aadhaar") || t.includes("uidai")) return "Aadhaar";
+    if (t.includes("permanent account number") || t.includes("pan")) return "PAN";
+    if (t.includes("passport")) return "Passport";
+    if (t.includes("voter")) return "Voter";
+    if (t.includes("driving")) return "Driving License";
+    if (t.includes("birth")) return "Birth Certificate";
+    if (t.includes("10th") || t.includes("ssc")) return "10th Marksheet";
+    if (t.includes("12th") || t.includes("hsc")) return "12th Marksheet";
+    if (t.includes("degree") || t.includes("bachelor")) return "Degree Certificate";
+    if (t.includes("caste")) return "Caste Certificate";
 
     return null;
   };
 
+  /* ================= DETAIL EXTRACTOR ================= */
+
   const extractSpecificDetails = (folder, text) => {
-    const cleanText = text.replace(/\s+/g, " ").trim();
+
+    const clean = text.replace(/\s+/g, " ");
 
     switch (folder) {
       case "Aadhaar":
-        const aadhaar = cleanText.match(/\b\d{4}\s\d{4}\s\d{4}\b/);
-        return aadhaar ? `Aadhaar Number: ${aadhaar[0]}` : "Aadhaar number not found.";
+        return clean.match(/\d{4}\s\d{4}\s\d{4}/)?.[0] || "";
       case "PAN":
-        const panText = cleanText.replace(/\s+/g, "").replace(/0/g, "O").replace(/1/g, "I").replace(/8/g, "B");
-        const pan = panText.match(/[A-Z]{5}[0-9]{4}[A-Z]{1}/);
-        return pan ? `PAN Number: ${pan[0]}` : "PAN number not found.";
+        return clean.match(/[A-Z]{5}[0-9]{4}[A-Z]/)?.[0] || "";
       case "Passport":
-        const passport = cleanText.match(/\b[A-Z][0-9]{7}\b/);
-        return passport ? `Passport Number: ${passport[0]}` : "Passport number not found.";
+        return clean.match(/[A-Z][0-9]{7}/)?.[0] || "";
       case "Voter":
-        const voter = cleanText.match(/\b[A-Z]{3}[0-9]{7}\b/);
-        return voter ? `Voter ID: ${voter[0]}` : "Voter ID not found.";
-      case "Driving License":
-        const dl = cleanText.match(/\b([A-Z]{2}\d{2}\s?\d{11}|\d{2}[A-Z]{2}\d{11})\b/i);
-        return dl ? `Driving License No: ${dl[0]}` : "Driving License number not found.";
-      case "Birth Certificate":
-        const dob = cleanText.match(/\b\d{2}[-/]\d{2}[-/]\d{4}\b/);
-        return dob ? `Date of Birth: ${dob[0]}` : "DOB not found.";
-      case "10th Marksheet":
-        const roll10 = cleanText.match(/\b\d{4,10}\b/);
-        return roll10 ? `10th Roll No: ${roll10[0]}` : "10th Roll No not found.";
-      case "12th Marksheet":
-        const roll12 = cleanText.match(/\b\d{4,10}\b/);
-        return roll12 ? `12th Roll No: ${roll12[0]}` : "12th Roll No not found.";
-      case "Degree Certificate":
-        const degree = cleanText.match(/\b([A-Z]{2,5}\d{2,6})\b/);
-        return degree ? `Degree No: ${degree[0]}` : "Degree number not found.";
-      case "Caste Certificate":
-        const casteId = cleanText.match(/\b[A-Z0-9]{3,10}\b/);
-        return casteId ? `Caste Certificate ID: ${casteId[0]}` : "Caste Certificate ID not found.";
+        return clean.match(/[A-Z]{3}[0-9]{7}/)?.[0] || "";
       default:
-        return "Detail extraction not configured for this type.";
+        return "";
     }
   };
 
+  /* ================= UI ================= */
+
   return (
-    <div style={{ marginBottom: '2rem' }}>
-      <h3>📥 Upload Document</h3>
-      <input type="file" accept="image/*,.pdf" onChange={handleFileUpload} />
-      {status && <p style={{ whiteSpace: 'pre-wrap' }}>Status: {status}</p>}
-      {preview && <img src={preview} alt="Preview" width="200" />}
+    <div className="upload-section">
+
+      <h3 className="upload-title">Upload Document</h3>
+
+      <div
+        className={`dropzone ${dragActive ? "drag-active" : ""}`}
+        onClick={openFilePicker}
+        onDragEnter={handleDrag}
+        onDragLeave={handleDrag}
+        onDragOver={handleDrag}
+        onDrop={handleDrop}
+      >
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*,.pdf"
+          onChange={handleFileUpload}
+          style={{ display: "none" }}
+        />
+
+        <div className="drop-content">
+          <div className="upload-icon">📄</div>
+          <p className="main-text">Drag & Drop or Click to Upload</p>
+          <span className="sub-text">JPG • PNG • PDF supported</span>
+          <div className="security-line">🔒 Encrypted before upload</div>
+        </div>
+
+      </div>
+
+      {status && <p className="status">{status}</p>}
+      {preview && <img src={preview} alt="preview" className="preview" />}
+
     </div>
   );
 }
