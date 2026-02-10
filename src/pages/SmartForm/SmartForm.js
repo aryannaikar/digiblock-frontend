@@ -9,7 +9,6 @@ export default function SmartForm() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  // Toggle requested fields
   const toggleField = (field) => {
     setRequestedFields((prev) =>
       prev.includes(field)
@@ -18,7 +17,6 @@ export default function SmartForm() {
     );
   };
 
-  // Decode and validate QR
   const verifyQR = () => {
     try {
       if (!qrValue || qrValue.length < 10) {
@@ -31,7 +29,6 @@ export default function SmartForm() {
         throw new Error("Invalid issuer");
       }
 
-      // 🔐 Mock verified data (later from backend)
       setDecodedData({
         aadhaar: "XXXX-XXXX-1234",
         pan: "ABCDE1234F",
@@ -61,49 +58,24 @@ export default function SmartForm() {
     <div className="smartform-container">
       <h2>📄 DigiBlock Smart Form</h2>
 
-      {/* STEP 1: REQUEST DETAILS */}
+      {/* STEP 1 */}
       {!decodedData && (
         <div className="card">
           <h3>Select Required Details</h3>
 
-          <label>
-            <input
-              type="checkbox"
-              checked={requestedFields.includes("aadhaar")}
-              onChange={() => toggleField("aadhaar")}
-            />
-            Aadhaar Number
-          </label>
-
-          <label>
-            <input
-              type="checkbox"
-              checked={requestedFields.includes("pan")}
-              onChange={() => toggleField("pan")}
-            />
-            PAN Number
-          </label>
-
-          <label>
-            <input
-              type="checkbox"
-              checked={requestedFields.includes("passport")}
-              onChange={() => toggleField("passport")}
-            />
-            Passport Number
-          </label>
-
-          <label>
-            <input
-              type="checkbox"
-              checked={requestedFields.includes("voter")}
-              onChange={() => toggleField("voter")}
-            />
-            Voter ID
-          </label>
+          {["aadhaar", "pan", "passport", "voter"].map((field) => (
+            <label key={field}>
+              <input
+                type="checkbox"
+                checked={requestedFields.includes(field)}
+                onChange={() => toggleField(field)}
+              />
+              {field.toUpperCase()}
+            </label>
+          ))}
 
           {requestedFields.length > 0 && (
-            <>
+            <div>
               <h4 style={{ marginTop: "15px" }}>Paste Smart Form QR</h4>
 
               <textarea
@@ -115,16 +87,15 @@ export default function SmartForm() {
               {error && <p className="error">{error}</p>}
 
               <button onClick={verifyQR}>Verify QR</button>
-            </>
+            </div>
           )}
         </div>
       )}
 
-      {/* STEP 2: CONSENT */}
+      {/* STEP 2 */}
       {decodedData && !consent && (
         <div className="card">
           <h3>Consent Required</h3>
-          <p>The following verified details will be shared:</p>
 
           <ul>
             {requestedFields.map((f) => (
@@ -139,7 +110,7 @@ export default function SmartForm() {
         </div>
       )}
 
-      {/* STEP 3: AUTO-FILLED FORM */}
+      {/* STEP 3 */}
       {consent && !submitted && (
         <form
           className="card"
@@ -151,40 +122,39 @@ export default function SmartForm() {
           <h3>Auto-Filled Verified Form</h3>
 
           {requestedFields.includes("aadhaar") && (
-            <>
+            <div>
               <label>Aadhaar Number</label>
               <input value={decodedData.aadhaar} readOnly />
-            </>
+            </div>
           )}
 
           {requestedFields.includes("pan") && (
-            <>
+            <div>
               <label>PAN Number</label>
               <input value={decodedData.pan} readOnly />
-            </>
+            </div>
           )}
 
           {requestedFields.includes("passport") && (
-            <>
+            <div>
               <label>Passport Number</label>
               <input value={decodedData.passport} readOnly />
-            </>
+            </div>
           )}
 
           {requestedFields.includes("voter") && (
-            <>
+            <div>
               <label>Voter ID</label>
               <input value={decodedData.voter} readOnly />
-            </>
+            </div>
           )}
 
           <p className="verified">✔ Verified via Blockchain</p>
-
           <button type="submit">Submit</button>
         </form>
       )}
 
-      {/* STEP 4: SUCCESS */}
+      {/* STEP 4 */}
       {submitted && (
         <div className="card success">
           <h3>✅ Form Submitted</h3>
@@ -195,4 +165,3 @@ export default function SmartForm() {
     </div>
   );
 }
-``
