@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/digiblock-frontend/static/css/main.f53a35f8.css",
+    "main.js": "/digiblock-frontend/static/js/main.dd425206.js",
+    "static/media/bg.jpg": "/digiblock-frontend/static/media/bg.a7bdc45107c2f093649a.jpg",
+    "static/media/emergency.jpg": "/digiblock-frontend/static/media/emergency.ead14320a18b0ca4eacf.jpg",
+    "static/media/doc.jpg": "/digiblock-frontend/static/media/doc.264ef98e37380b13c886.jpg",
+    "static/media/drive.png": "/digiblock-frontend/static/media/drive.377f2721055492982157.png",
+    "static/media/secure.png": "/digiblock-frontend/static/media/secure.b14db3a826264925f786.png",
+    "index.html": "/digiblock-frontend/index.html",
+    "main.f53a35f8.css.map": "/digiblock-frontend/static/css/main.f53a35f8.css.map",
+    "main.dd425206.js.map": "/digiblock-frontend/static/js/main.dd425206.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f53a35f8.css",
+    "static/js/main.dd425206.js"
+  ]
+}
