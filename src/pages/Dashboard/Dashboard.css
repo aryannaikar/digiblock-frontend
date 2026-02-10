@@ -810,3 +810,27 @@ body:not(.dark) .missing-badge{
   background:rgba(0,0,0,.2);
   color:white;
 }
+
+
+ .icon-btn {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.icon-btn:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+
+
+.small-link {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #ffd700;
+  text-decoration: underline;
+}

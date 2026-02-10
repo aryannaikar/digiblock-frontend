@@ -29,26 +29,20 @@ const folderColors = [
 ];
 
 export default function FolderList({ documents, onDelete, filter }) {
-
-  const [qrDoc, setQrDoc] = useState(null);
+  const [infoDoc, setInfoDoc] = useState(null);
+  const [verifyDoc, setVerifyDoc] = useState(null);
 
   const BASE_URL = "http://localhost:5000";
 
-  /* ================= FILTER LOGIC ================= */
-
-  const filteredFolders = ALL_FOLDERS.filter(folder => {
+  const filteredFolders = ALL_FOLDERS.filter((folder) => {
     const doc = documents[folder];
-
     if (filter === "uploaded") return doc;
     if (filter === "missing") return !doc;
-
     return true;
   });
 
-  /* ================= QR PAYLOAD ================= */
-
-  const generateQrPayload = (doc) => {
-    return btoa(
+  const generateQrPayload = (doc) =>
+    btoa(
       JSON.stringify({
         documentId: doc._id,
         folder: doc.folder,
@@ -56,25 +50,23 @@ export default function FolderList({ documents, onDelete, filter }) {
         version: "v1",
       })
     );
-  };
 
   return (
     <div className="scroll-section">
-
       <div className="card-scroll">
-
         {filteredFolders.map((folder, idx) => {
-
           const doc = documents[folder];
           const color = folderColors[idx % folderColors.length];
 
           return (
-            <div key={folder} className="modern-card" style={{ backgroundColor: color }}>
-
+            <div
+              key={folder}
+              className="modern-card"
+              style={{ backgroundColor: color }}
+            >
               {/* HEADER */}
               <div className="card-top">
                 <span className="doc-name">{folder}</span>
-
                 {doc ? (
                   <span className="verified-badge">Uploaded</span>
                 ) : (
@@ -82,7 +74,6 @@ export default function FolderList({ documents, onDelete, filter }) {
                 )}
               </div>
 
-              {/* CONTENT */}
               {doc ? (
                 <>
                   {doc.mainDocNumber && (
@@ -91,93 +82,138 @@ export default function FolderList({ documents, onDelete, filter }) {
                     </div>
                   )}
 
-                  <div className="secure-line">
-                    Secured via Blockchain
-                  </div>
+                  <div className="secure-line">Secured via Blockchain</div>
 
-                  {/* ACTIONS */}
+                  {/* ==== 4 ACTION BUTTONS ==== */}
                   <div className="card-actions">
-
-                    {/* VIEW DOCUMENT */}
-                    <button
-                      className="primary-btn"
-                      onClick={() => {
-                        const viewUrl = doc.fileUrl.startsWith("http")
-                          ? doc.fileUrl
-                          : `${BASE_URL}${doc.fileUrl}`;
-                        window.open(viewUrl, "_blank");
-                      }}
-                    >
-                      View
-                    </button>
-
-                    {/* QR */}
+                    {/* 1️⃣ VIEW */}
                     <button
                       className="icon-btn"
-                      onClick={() => setQrDoc(doc)}
+                      title="View Document"
+                      onClick={() => {
+                        const url = doc.fileUrl.startsWith("http")
+                          ? doc.fileUrl
+                          : `${BASE_URL}${doc.fileUrl}`;
+                        window.open(url, "_blank");
+                      }}
                     >
-                      QR
+                      👁
                     </button>
 
-                    {/* DELETE */}
+                    {/* 2️⃣ INFO */}
+                    <button
+                      className="icon-btn"
+                      title="Document Info"
+                      onClick={() => setInfoDoc(doc)}
+                    >
+                      ℹ
+                    </button>
+
+                    {/* 3️⃣ VERIFY */}
+                    <button
+                      className="icon-btn"
+                      title="Verify on Blockchain"
+                      onClick={() => setVerifyDoc(doc)}
+                    >
+                      ✅
+                    </button>
+
+                    {/* 4️⃣ DELETE */}
                     <button
                       className="icon-btn delete"
+                      title="Delete Document"
                       onClick={() => onDelete(folder)}
                     >
                       🗑
                     </button>
-
                   </div>
                 </>
               ) : (
-                <div className="card-middle empty">
-                  No document uploaded
-                </div>
+                <div className="card-middle empty">No document uploaded</div>
               )}
-
             </div>
           );
         })}
-
       </div>
 
-      {/* ================= QR MODAL ================= */}
-
-      {qrDoc && (
-        <div className="modal-overlay" onClick={() => setQrDoc(null)}>
+      {/* ================= INFO MODAL ================= */}
+      {infoDoc && (
+        <div className="modal-overlay" onClick={() => setInfoDoc(null)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h3>📄 Document Info</h3>
 
-            <h3>Smart Form QR</h3>
+            <p><strong>Type:</strong> {infoDoc.folder}</p>
 
-            {(() => {
-              const payload = generateQrPayload(qrDoc);
+            {infoDoc.mainDocNumber && (
+              <p><strong>Number:</strong> {infoDoc.mainDocNumber}</p>
+            )}
 
-              return (
-                <>
-                  <QRCodeCanvas value={payload} size={250} level="H" />
+            {infoDoc.createdAt && (
+              <p>
+                <strong>Uploaded:</strong>{" "}
+                {new Date(infoDoc.createdAt).toLocaleString()}
+              </p>
+            )}
 
-                  <p style={{ marginTop: "10px" }}>
-                    Scan this QR to auto-fill verified form
-                  </p>
-
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(payload);
-                      alert("QR value copied!");
-                    }}
-                  >
-                    Copy QR Value
-                  </button>
-
-                  <button onClick={() => setQrDoc(null)}>Close</button>
-                </>
-              );
-            })()}
-
+            <button onClick={() => setInfoDoc(null)}>Close</button>
           </div>
         </div>
       )}
 
+      {/* ================= VERIFY MODAL ================= */}
+      {verifyDoc && (
+        <div className="modal-overlay" onClick={() => setVerifyDoc(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h3>🔐 Blockchain Verification</h3>
+
+            <QRCodeCanvas
+              value={generateQrPayload(verifyDoc)}
+              size={220}
+              level="H"
+            />
+
+            <p style={{ marginTop: "8px" }}>
+              Scan QR to auto-fill verified form
+            </p>
+
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  generateQrPayload(verifyDoc)
+                );
+                alert("QR value copied!");
+              }}
+            >
+              Copy QR
+            </button>
+
+            {verifyDoc.txHash && (
+              <>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(verifyDoc.txHash);
+                    alert("Tx hash copied!");
+                  }}
+                >
+                  Copy Tx Hash
+                </button>
+
+                <a
+                  href={`https://sepolia.etherscan.io/tx/${verifyDoc.txHash}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="small-link"
+                >
+                  View on Etherscan
+                </a>
+              </>
+            )}
+
+            <button onClick={() => setVerifyDoc(null)}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
