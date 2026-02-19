@@ -42,14 +42,17 @@ export default function FolderList({ documents, onDelete, filter }) {
   });
 
   const generateQrPayload = (doc) =>
-    btoa(
-      JSON.stringify({
-        documentId: doc._id,
-        folder: doc.folder,
-        issuer: "DigiBlock",
-        version: "v1",
-      })
-    );
+  btoa(
+    JSON.stringify({
+      folder: doc.folder,
+      mainDocNumber: doc.mainDocNumber,
+      txHash: doc.txHash || "",
+      issuer: "DigiBlock",
+      v: 2
+    })
+  );
+
+
 
   return (
     <div className="scroll-section">

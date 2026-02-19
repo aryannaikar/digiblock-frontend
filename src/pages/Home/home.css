@@ -1,237 +1,456 @@
-.home-container {
- 
-  height: 188vh;
-  background-image: linear-gradient(to bottom, #00ffe1, #f0f0f0);
-
-}
-
-  
-
-
-* {
-  margin: 0;
-  padding: 0;
-}
-
-.Wel {
-  position: relative;
-  top: 10vh;
-  left: 50px;
-  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  font-style: oblique;
-  color: black;
-  color: gold;
-     text-shadow: -1.2px 0 rgb(255, 255, 255), 0 1.5px black, 1.2px 0 rgb(255, 255, 255), 0 -1.5px black;
-  font-weight: 400;
-  width: 130vh;
-  height: 20vh;
-  font-size: 8vh;
-  margin: auto;
-}
-
-.safe-scroll model-viewer {
-  position: fixed;
-  top: 60%;
-  left: 50%;
-  width: 500px;
-  height: 500px;
-  transform: translate(-50%, -50%);
-  transition: transform 0.5s ease-out;
-}
-
-
-
-p {
- 
- margin: auto;
-  padding: 10px ;
- 
-}
-
-.p1 {
-  margin-top: 60px;
-   font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  font-style: oblique;
-  color: black;
-  font-weight: 600;
-  width: 130vh;
-  height: 20vh;
-  margin-left: 50px;
-   font-size: 4vh;
-  
-}
-
-.p2 {
-  padding-left: 700px;
-  position: relative;
-  top: 35vh;
-  right: 50px;
-   font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  font-style: oblique;
-  color: black;
-  font-weight: 600;
-   font-size: 4vh;
-}
-
-.get-started {
-  position: relative;
-  top: 97vh;
-  left: 85vh;
-  font-size: 35px;
-  border-radius: 100px;
-  border: rgb(251, 255, 0) 2px solid;
-   transition: opacity 0.6s ease-in-out;
-  opacity: 1;
-  box-shadow: #00ffe1 4px 4px 20px;
-}
-
-.get-started.fade-out {
-  opacity: 0;
-}
-
-.get-started:hover {
-  background-color: transparent;
-  color: rgb(2, 193, 231);
-  cursor: pointer;
-  border: black 2px solid;
-}
-
-.p2, .p1{
-      animation: autoshow both ;
-    animation-timeline: view(70% 30%) ;
-}
-
- @keyframes autoshow{
-    from{
-        opacity: 0;
-        transform: translateY(50px) scale(0.1);
-    }
-
-    to{
-        opacity: 1;
-        transform: translateY(0) scale(1);
-
-    }
- }
-
-.get-started {
-  animation: autoshow1 1s both; /* Added duration (1s) */
-  animation-timeline: view(90% 0%);
-  
-}
-
-@keyframes autoshow1 {
-  from {
-    opacity: 0;
-    transform: translateY(100px) scale(0.1);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(20) scale(1);
-  }
-}
- 
-
-.zoom-in {
-  animation: zoomLocker 1s ease-in-out forwards;
-}
-
-@keyframes zoomLocker {
-  0% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(6);
-    opacity: 0;
-  }
-}
-
-
-body.dark .home-container {
-  background-image: linear-gradient(to bottom, #00ffe1, #000000);
+/* General Layout */
+.home-wrapper {
+  background: black;
   color: white;
+  font-family: 'Segoe UI', sans-serif;
+  position: relative;
+}
+
+/* Particle Canvas Background */
+.particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Scroll Section */
+.hero-section {
+  height: 300vh;
+  position: relative;
+}
+
+.hero-canvas {
+  position: sticky;
+  top: 0;
+  width: 99vw;
+  /* 🔥 use viewport width */
+  height: 100vh;
+  display: block;
 }
 
 
-.get-started {
-  opacity: 1;
-  transition: opacity 0.6s ease-in-out; /* smooth fade */
+/* Fade transition after animation */
+.hero-section::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  height: 200px;
+  width: 100%;
+  background: linear-gradient(to bottom, transparent, black);
 }
 
-.get-started.fade-out {
+/* Blockchain Animated Grid */
+.blockchain-bg {
+  position: relative;
+  height: 400px;
+  background: black;
+  overflow: hidden;
+}
+
+.blockchain-bg::before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background-image:
+    linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 0, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+  from {
+    transform: translate(0, 0);
+  }
+
+  to {
+    transform: translate(-200px, -200px);
+  }
+}
+
+/* Content Section */
+.content-section {
+  padding: 120px 10%;
+  text-align: center;
+  background: black;
+}
+
+/* Neon Gradient Heading */
+.content-section h1 {
+  font-size: 3rem;
+  background: linear-gradient(90deg, #00ffe1, #9c27b0, #00ffe1);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientMove 6s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes gradientMove {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* Description */
+.content-section p {
+  max-width: 600px;
+  margin: 0 auto 30px;
+  line-height: 1.6;
+  color: #ccc;
+}
+
+/* Futuristic Button */
+.content-section button {
+  padding: 14px 28px;
+  background: linear-gradient(45deg, #00ffe1, #9c27b0);
+  border: none;
+  color: black;
+  font-weight: bold;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+}
+
+.content-section button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.8);
+}
+
+/* Features Section */
+.features-section {
+  padding: 100px 5%;
+  background: linear-gradient(180deg, black 0%, #0a0a0a 100%);
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.features-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 60px;
+  background: linear-gradient(90deg, #00ffe1, #9c27b0);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  perspective: 1000px;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(0, 255, 225, 0.2);
+  border-radius: 16px;
+  padding: 40px 30px;
+  transition: all 0.1s ease-out;
+  backdrop-filter: blur(10px);
+  transform-style: preserve-3d;
+  transform: perspective(1000px) rotateX(0) rotateY(0);
+  will-change: transform;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0, 255, 225, 0.1), rgba(156, 39, 176, 0.1));
   opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
 }
 
+.feature-card:hover::before {
+  opacity: 1;
+}
 
+.feature-card:hover {
+  border-color: rgba(0, 255, 225, 0.6);
+  box-shadow: 0 20px 60px rgba(0, 255, 225, 0.3);
+}
 
-/* 📱 Mobile screens */
-/* 📱 Mobile screens */
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 0 10px rgba(0, 255, 225, 0.5));
+}
+
+.feature-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #00ffe1;
+}
+
+.feature-card p {
+  color: #aaa;
+  line-height: 1.6;
+}
+
+/* How It Works Section */
+.how-it-works-section {
+  padding: 100px 5%;
+  background: black;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.how-it-works-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 80px;
+  background: linear-gradient(90deg, #9c27b0, #00ffe1);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.steps-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.step {
+  flex: 1;
+  min-width: 250px;
+  max-width: 300px;
+  padding: 30px;
+  background: rgba(156, 39, 176, 0.1);
+  border: 2px solid rgba(156, 39, 176, 0.3);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.step:hover {
+  transform: scale(1.05);
+  border-color: rgba(156, 39, 176, 0.8);
+  box-shadow: 0 0 30px rgba(156, 39, 176, 0.4);
+}
+
+.step-number {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, #9c27b0, #00ffe1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: black;
+}
+
+.step h3 {
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  color: #00ffe1;
+}
+
+.step p {
+  color: #bbb;
+  line-height: 1.6;
+}
+
+.step-connector {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, #9c27b0, #00ffe1);
+  position: relative;
+}
+
+.step-connector::after {
+  content: "→";
+  position: absolute;
+  right: -10px;
+  top: -12px;
+  color: #00ffe1;
+  font-size: 1.5rem;
+}
+
+/* CTA Section */
+.cta-section {
+  padding: 120px 5%;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a0a1a 100%);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.cta-section::before {
+  content: "";
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(156, 39, 176, 0.3), transparent);
+  border-radius: 50%;
+  top: -100px;
+  right: -100px;
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+.cta-content {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-section h2 {
+  font-size: 2.8rem;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #00ffe1, #9c27b0, #00ffe1);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientMove 4s linear infinite;
+}
+
+.cta-section p {
+  font-size: 1.2rem;
+  color: #ccc;
+  margin-bottom: 40px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-button {
+  padding: 18px 40px;
+  background: linear-gradient(45deg, #9c27b0, #00ffe1);
+  border: none;
+  color: black;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 30px rgba(156, 39, 176, 0.5);
+}
+
+.cta-button:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 10px 50px rgba(156, 39, 176, 0.8);
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  .home-container {
-    height: 115vh;
-    width: 100%;
-    padding: 1rem;
-    background-image: linear-gradient(to bottom, #00ffe1, #f0f0f0);
+  .hero-canvas {
+    width: 100vw;
   }
 
-  .Wel {
-    top: 5vh;
-    left: 0;
-    width: 100%;
-    height: auto;
-    font-size: 4vh; /* smaller text */
-    text-align: center;
-    padding: 0 1rem;
+  .content-section {
+    padding: 80px 5%;
   }
 
-  .safe-scroll model-viewer {
-    position: relative;
-    top: 15rem;
-    left: 19%;
-    width: 250px;
-    height: 250px;
-    transform: translateX(-50%);
+  .content-section h1 {
+    font-size: 2rem;
   }
 
-  .p1 {
-    width: 70%;
-   position: relative;
-   top: -30vh;
-    font-size: 1.5vh;
-    left: -10vh;
-    text-align: center;
-    padding: 0 1rem;
+  .content-section p {
+    font-size: 0.95rem;
   }
 
-  .p2 {
-    padding-left: 0;
-    top: -20vh;
-    right: 0;
-    width: 70%;
-    font-size: 1.2vh;
-    text-align: center;
-    padding: 0 1rem;
-    position: relative;
-    left: 12vh;
+  .features-section h2,
+  .how-it-works-section h2 {
+    font-size: 1.8rem;
   }
 
-  .get-started {
-    position: relative;
-    top: 3rem;
-    left: 50%;
-    transform: translateX(-50%);
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .feature-card {
+    padding: 30px 20px;
+  }
+
+  .steps-container {
+    flex-direction: column;
+  }
+
+  .step-connector {
+    width: 2px;
+    height: 60px;
+    transform: rotate(90deg);
+  }
+
+  .step-connector::after {
+    content: "↓";
+    right: -8px;
+    top: 20px;
+  }
+
+  .cta-section h2 {
+    font-size: 2rem;
+  }
+
+  .cta-section p {
     font-size: 1rem;
-    padding: 0.6rem 1.2rem;
-    border-radius: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-section h1 {
+    font-size: 1.6rem;
   }
 
-  @keyframes zoomLocker {
-    0% {
-      transform: translate(-50%, -50%) scale(1);
-    }
-    100% {
-      transform: translate(-50%, -50%) scale(2.5);
-    }
+  .features-section,
+  .how-it-works-section,
+  .cta-section {
+    padding: 60px 5%;
+  }
+
+  .feature-icon {
+    font-size: 2.5rem;
+  }
+
+  .feature-card h3,
+  .step h3 {
+    font-size: 1.2rem;
+  }
+
+  .step-number {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
   }
 }

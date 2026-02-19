@@ -2,12 +2,9 @@
   "name": "digilocker",
   "version": "0.1.0",
   "private": true,
-
   "homepage": "https://aryannaikar.github.io/digiblock-frontend",
-
-  "proxy": "http://localhost:5000",
-
   "dependencies": {
+    "@google/model-viewer": "^4.1.0",
     "@react-three/drei": "^10.6.1",
     "@react-three/fiber": "^9.3.0",
     "@testing-library/dom": "^10.4.0",
@@ -19,36 +16,34 @@
     "dotenv": "^17.2.1",
     "ethers": "^6.15.0",
     "firebase": "^12.0.0",
+    "framer-motion": "^12.34.2",
     "jsqr": "^1.4.0",
     "nodemailer": "^7.0.5",
     "qrcode.react": "^4.2.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-qr-code": "^2.0.18",
+    "react-qr-reader": "^3.0.0-beta-1",
     "react-router-dom": "^7.7.0",
     "react-scripts": "5.0.1",
     "tesseract.js": "^6.0.1",
     "three": "^0.179.1",
     "web-vitals": "^2.1.4"
   },
-
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
     ]
   },
-
   "browserslist": {
     "production": [
       ">0.2%",
@@ -61,14 +56,17 @@
       "last 1 safari version"
     ]
   },
-
   "devDependencies": {
     "gh-pages": "^6.1.1",
     "jest": "^27.5.1"
   },
-
   "description": "DigiBlock – blockchain-secured digital document locker",
-  "keywords": ["digilocker", "blockchain", "react", "vercel"],
+  "keywords": [
+    "digilocker",
+    "blockchain",
+    "react",
+    "vercel"
+  ],
   "author": "Aryan Naikar",
   "license": "ISC"
 }

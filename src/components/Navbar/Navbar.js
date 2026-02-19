@@ -20,14 +20,10 @@ export default function Navbar() {
   }, [darkMode]);
 
   const toggleDarkMode = () => setDarkMode(prev => !prev);
-
-  const handleLinkClick = () => {
-    setMenuOpen(false);
-  };
+  const handleLinkClick = () => setMenuOpen(false);
 
   const handleLogout = () => {
-    const confirmLogout = window.confirm('Are you sure you want to logout?');
-    if (confirmLogout) {
+    if (window.confirm('Are you sure you want to logout?')) {
       logout();
       setMenuOpen(false);
       navigate('/login');
@@ -36,13 +32,10 @@ export default function Navbar() {
 
   return (
     <nav className={`navbar ${darkMode ? 'navbar-dark' : ''}`}>
-
-      {/* LOGO */}
       <Link to="/" className="logo" onClick={handleLinkClick}>
-        MyDigiLocker
+        DigiBlock
       </Link>
 
-      {/* MOBILE MENU BUTTON */}
       <button
         className="menu-btn"
         onClick={() => setMenuOpen(prev => !prev)}
@@ -50,7 +43,6 @@ export default function Navbar() {
         ☰
       </button>
 
-      {/* NAV LINKS */}
       <ul className={`nav-links ${menuOpen ? 'active' : ''}`}>
 
         {user && (
@@ -61,11 +53,20 @@ export default function Navbar() {
           </li>
         )}
 
+        {/* ✅ FIXED LINK */}
         <li>
-          <Link to="/smart-form" onClick={handleLinkClick}>
+          <Link to="/form" onClick={handleLinkClick}>
             Smart Form
           </Link>
         </li>
+
+        {user?.role === "admin" && (
+          <li>
+            <Link to="/admin/forms" onClick={handleLinkClick}>
+              Create Form
+            </Link>
+          </li>
+        )}
 
         <li>
           <Link to="/retrieve-document" onClick={handleLinkClick}>
@@ -74,19 +75,18 @@ export default function Navbar() {
         </li>
 
         {!user && (
-          <li>
-            <Link to="/login" onClick={handleLinkClick}>
-              Login
-            </Link>
-          </li>
-        )}
-
-        {!user && (
-          <li>
-            <Link to="/register" onClick={handleLinkClick}>
-              Register
-            </Link>
-          </li>
+          <>
+            <li>
+              <Link to="/login" onClick={handleLinkClick}>
+                Login
+              </Link>
+            </li>
+            <li>
+              <Link to="/register" onClick={handleLinkClick}>
+                Register
+              </Link>
+            </li>
+          </>
         )}
 
         {user && (
